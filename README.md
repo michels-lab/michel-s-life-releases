@@ -1,27 +1,37 @@
-# Michel's Life — Windows Releases
+# Michel's Lab — Public Release Channels
+
+This public repository distributes installable binaries and update feeds for selected **Michel's Lab** applications. Application source code and development history live in their own repositories.
+
+## Michel's Life — Windows
 
 Official Windows distribution channel for **Michel's Life**, an RPG-inspired productivity and life-management desktop app.
 
-This repository intentionally contains **release binaries only**. The application source code is maintained separately in a private repository.
-
-## Downloads
-
-Use the **Releases** section to download the latest Windows build.
-
-Each normal release can include:
+Normal releases can include:
 
 - `MichelsLife-Setup-vX.Y.Z.exe` — recommended Windows installer
-- `MichelsLife-vX.Y.Z.exe` — portable single-file build
-- `MichelsLife-vX.Y.Z.exe.sha256` — SHA-256 checksum for the portable build
-- `AppBundle.zip` — internal visual/application bundle used to bootstrap the next release
-- `michels_life_icon.ico` — release icon asset
+- `MichelsLife-vX.Y.Z.exe` — portable build
+- `MichelsLife-vX.Y.Z.exe.sha256` — SHA-256 checksum
+- `AppBundle.zip` — internal bootstrap bundle
+- `michels_life_icon.ico`
 
-## Update channel
+Michel's Life checks this public repository for newer official releases and verifies published checksums before applying direct updates.
 
-Michel's Life checks this public repository for newer official releases. Update downloads are verified against their published SHA-256 checksum before installation.
+## LouderMe — Android direct / sideload
 
-Before applying an update, Michel's Life creates a restore point of the current local state.
+LouderMe source remains private. This repository exposes only what the direct updater needs:
 
-## Source code
+- public release APKs signed with the stable Michel's Lab sideload key;
+- SHA-256 checksum files;
+- `louderme/latest.json` — machine-readable latest-version manifest.
 
-Source code, build workflows and development history are not published in this repository.
+LouderMe direct builds check that manifest automatically, download the APK, verify its checksum, package identity, version and signing identity, then hand the verified package to Android's installer.
+
+Google Play builds use Google Play's update channel instead.
+
+See `louderme/README.md` for the direct-update contract.
+
+## Security
+
+Public availability of a binary does not make the proprietary application source open source.
+
+Clients must never require a private GitHub token to check for or download an update.
