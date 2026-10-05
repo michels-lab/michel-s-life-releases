@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "appId": "com.michelslab.louderme",
+  "channel": "sideload",
+  "versionCode": 4,
+  "versionName": "0.1.3",
+  "apkUrl": "",
+  "sha256": "",
+  "releaseNotes": "Bootstrap manifest for LouderMe direct updates. v0.1.4 will become the first stable-signed sideload baseline."
+}
