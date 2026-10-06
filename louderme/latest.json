@@ -2,9 +2,9 @@
   "schema": 1,
   "appId": "com.michelslab.louderme",
   "channel": "sideload",
-  "versionCode": 5,
-  "versionName": "0.1.4",
-  "apkUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/download/louderme-v0.1.4/LouderMe-v0.1.4-sideload.apk",
-  "sha256": "7c4231e718fba60a74df0717a68f0f5ff0b9273b79194de501ffc41b4386958a",
+  "versionCode": 6,
+  "versionName": "0.1.5",
+  "apkUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/download/louderme-v0.1.5/LouderMe-v0.1.5-sideload.apk",
+  "sha256": "ca04a563ef84a318ee176ef9e575d47aa770db055f7c649f2ad8bdccf76d11d3",
   "releaseNotes": "Stable Michel's Lab Direct build with automatic sideload update support."
 }
