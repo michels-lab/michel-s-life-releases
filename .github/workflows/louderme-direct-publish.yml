@@ -1,0 +1,140 @@
+name: Publish LouderMe Direct Build
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'louderme/bootstrap-transfer.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: louderme-direct-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish LouderMe signed APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out release channel
+        uses: actions/checkout@v5
+
+      - name: Read transfer metadata
+        id: meta
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(jq -r '.versionName' louderme/bootstrap-transfer.json)"
+          VERSION_CODE="$(jq -r '.versionCode' louderme/bootstrap-transfer.json)"
+          TRANSFER_URL="$(jq -r '.transferUrl' louderme/bootstrap-transfer.json)"
+
+          test -n "$VERSION"
+          test -n "$VERSION_CODE"
+          test -n "$TRANSFER_URL"
+          test "$TRANSFER_URL" != "null"
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "version_code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
+          echo "transfer_url=$TRANSFER_URL" >> "$GITHUB_OUTPUT"
+
+      - name: Download signed bootstrap artifact
+        env:
+          TRANSFER_URL: ${{ steps.meta.outputs.transfer_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 "$TRANSFER_URL" --output transfer.zip
+          mkdir -p staging
+          unzip -q transfer.zip -d staging
+          find staging -maxdepth 3 -type f -print
+
+      - name: Verify transferred APK
+        id: verify
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          APK="$(find staging -type f -name 'LouderMe-v*-sideload.apk' | head -n 1)"
+          CHECKSUM_FILE="$(find staging -type f -name 'LouderMe-v*-sideload.apk.sha256' | head -n 1)"
+
+          test -f "$APK"
+          test -f "$CHECKSUM_FILE"
+
+          EXPECTED="$(awk '{print $1}' "$CHECKSUM_FILE")"
+          ACTUAL="$(sha256sum "$APK" | awk '{print $1}')"
+
+          if [ "$EXPECTED" != "$ACTUAL" ]; then
+            echo "Transferred APK checksum mismatch"
+            exit 1
+          fi
+
+          mkdir -p dist
+          cp "$APK" dist/LouderMe-v${{ steps.meta.outputs.version }}-sideload.apk
+          printf '%s  %s\n' "$ACTUAL" "LouderMe-v${{ steps.meta.outputs.version }}-sideload.apk"             > dist/LouderMe-v${{ steps.meta.outputs.version }}-sideload.apk.sha256
+
+          echo "sha256=$ACTUAL" >> "$GITHUB_OUTPUT"
+
+      - name: Publish public LouderMe binary release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          VERSION="${{ steps.meta.outputs.version }}"
+          TAG="louderme-v$VERSION"
+          APK="dist/LouderMe-v$VERSION-sideload.apk"
+          CHECKSUM="dist/LouderMe-v$VERSION-sideload.apk.sha256"
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$APK" "$CHECKSUM" --clobber
+          else
+            gh release create "$TAG"               "$APK"               "$CHECKSUM"               --title "LouderMe v$VERSION — Michel's Lab Direct"               --notes "Official stable-signed LouderMe direct/sideload build. Source code remains private."
+          fi
+
+      - name: Update public latest.json
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          VERSION="${{ steps.meta.outputs.version }}"
+          VERSION_CODE="${{ steps.meta.outputs.version_code }}"
+          SHA="${{ steps.verify.outputs.sha256 }}"
+          TAG="louderme-v$VERSION"
+          APK_URL="https://github.com/realmichelduarte/michel-s-life-releases/releases/download/$TAG/LouderMe-v$VERSION-sideload.apk"
+
+          python3 - <<PY
+          import json
+          from pathlib import Path
+
+          payload = {
+              "schema": 1,
+              "appId": "com.michelslab.louderme",
+              "channel": "sideload",
+              "versionCode": int("$VERSION_CODE"),
+              "versionName": "$VERSION",
+              "apkUrl": "$APK_URL",
+              "sha256": "$SHA",
+              "releaseNotes": "Stable Michel's Lab Direct build with automatic sideload update support."
+          }
+
+          Path("louderme/latest.json").write_text(
+              json.dumps(payload, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+          git config user.name "Michel's Lab Release Bot"
+          git config user.email "realmichelduarte@gmail.com"
+          git add louderme/latest.json
+
+          if git diff --cached --quiet; then
+            echo "latest.json already current"
+          else
+            git commit -m "release: LouderMe v$VERSION direct channel"
+            git push
+          fi
