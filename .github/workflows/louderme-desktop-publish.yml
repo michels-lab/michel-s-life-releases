@@ -1,0 +1,150 @@
+name: Publish LouderMe Desktop Build
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'louderme-desktop/bootstrap-transfer.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: louderme-desktop-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish LouderMe Desktop Windows release
+    if: "${{ github.event.head_commit.message != 'release: clean LouderMe Desktop transfer staging' }}"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out release channel
+        uses: actions/checkout@v5
+
+      - name: Read transfer metadata
+        id: meta
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(jq -r '.versionName' louderme-desktop/bootstrap-transfer.json)"
+          TRANSFER_URL="$(jq -r '.transferUrl' louderme-desktop/bootstrap-transfer.json)"
+
+          test -n "$VERSION"
+          test -n "$TRANSFER_URL"
+          test "$TRANSFER_URL" != "null"
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "transfer_url=$TRANSFER_URL" >> "$GITHUB_OUTPUT"
+
+      - name: Download validated Windows artifact
+        env:
+          TRANSFER_URL: ${{ steps.meta.outputs.transfer_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 "$TRANSFER_URL" --output transfer.zip
+          mkdir -p staging
+          unzip -q transfer.zip -d staging
+          find staging -maxdepth 4 -type f -print
+
+      - name: Verify transferred Windows binaries
+        id: verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.meta.outputs.version }}"
+
+          PORTABLE="$(find staging -type f -name "LouderMe-v$VERSION.exe" | head -n 1)"
+          PORTABLE_SUM="$(find staging -type f -name "LouderMe-v$VERSION.exe.sha256" | head -n 1)"
+          INSTALLER="$(find staging -type f -name "LouderMe-Setup-v$VERSION.exe" | head -n 1)"
+          INSTALLER_SUM="$(find staging -type f -name "LouderMe-Setup-v$VERSION.exe.sha256" | head -n 1)"
+          NOTES="$(find staging -type f -name "v$VERSION.md" | head -n 1)"
+
+          test -f "$PORTABLE"
+          test -f "$PORTABLE_SUM"
+          test -f "$INSTALLER"
+          test -f "$INSTALLER_SUM"
+          test -f "$NOTES"
+
+          PORTABLE_EXPECTED="$(awk '{print $1}' "$PORTABLE_SUM")"
+          PORTABLE_ACTUAL="$(sha256sum "$PORTABLE" | awk '{print $1}')"
+          INSTALLER_EXPECTED="$(awk '{print $1}' "$INSTALLER_SUM")"
+          INSTALLER_ACTUAL="$(sha256sum "$INSTALLER" | awk '{print $1}')"
+
+          test "$PORTABLE_EXPECTED" = "$PORTABLE_ACTUAL"
+          test "$INSTALLER_EXPECTED" = "$INSTALLER_ACTUAL"
+
+          mkdir -p dist
+          cp "$PORTABLE" "dist/LouderMe-v$VERSION.exe"
+          cp "$PORTABLE_SUM" "dist/LouderMe-v$VERSION.exe.sha256"
+          cp "$INSTALLER" "dist/LouderMe-Setup-v$VERSION.exe"
+          cp "$INSTALLER_SUM" "dist/LouderMe-Setup-v$VERSION.exe.sha256"
+          cp "$NOTES" "dist/RELEASE_NOTES.md"
+
+          echo "portable_sha256=$PORTABLE_ACTUAL" >> "$GITHUB_OUTPUT"
+          echo "installer_sha256=$INSTALLER_ACTUAL" >> "$GITHUB_OUTPUT"
+
+      - name: Publish public LouderMe Desktop release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.meta.outputs.version }}"
+          TAG="louderme-desktop-v$VERSION"
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG"               "dist/LouderMe-v$VERSION.exe"               "dist/LouderMe-v$VERSION.exe.sha256"               "dist/LouderMe-Setup-v$VERSION.exe"               "dist/LouderMe-Setup-v$VERSION.exe.sha256"               --clobber
+            gh release edit "$TAG"               --title "LouderMe Desktop v$VERSION — Michel's Lab"               --notes-file dist/RELEASE_NOTES.md               --prerelease=false
+          else
+            gh release create "$TAG"               "dist/LouderMe-v$VERSION.exe"               "dist/LouderMe-v$VERSION.exe.sha256"               "dist/LouderMe-Setup-v$VERSION.exe"               "dist/LouderMe-Setup-v$VERSION.exe.sha256"               --title "LouderMe Desktop v$VERSION — Michel's Lab"               --notes-file dist/RELEASE_NOTES.md
+          fi
+
+      - name: Update public Desktop latest.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.meta.outputs.version }}"
+          PORTABLE_SHA="${{ steps.verify.outputs.portable_sha256 }}"
+          INSTALLER_SHA="${{ steps.verify.outputs.installer_sha256 }}"
+          TAG="louderme-desktop-v$VERSION"
+          BASE="https://github.com/realmichelduarte/michel-s-life-releases/releases/download/$TAG"
+
+          mkdir -p louderme-desktop
+
+          python3 - <<PY
+          import json
+          from pathlib import Path
+
+          payload = {
+              "schema": 1,
+              "product": "LouderMe Desktop",
+              "platform": "windows-x64",
+              "channel": "stable",
+              "versionName": "$VERSION",
+              "installerUrl": "$BASE/LouderMe-Setup-v$VERSION.exe",
+              "installerSha256": "$INSTALLER_SHA",
+              "portableUrl": "$BASE/LouderMe-v$VERSION.exe",
+              "portableSha256": "$PORTABLE_SHA",
+              "releaseUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/tag/$TAG"
+          }
+
+          Path("louderme-desktop/latest.json").write_text(
+              json.dumps(payload, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+          git config user.name "Michel's Lab Release Bot"
+          git config user.email "realmichelduarte@gmail.com"
+          git add louderme-desktop/latest.json
+
+          if git diff --cached --quiet; then
+            echo "Desktop latest.json already current"
+          else
+            git commit -m "release: LouderMe Desktop v$VERSION stable channel"
+            git push
+          fi
