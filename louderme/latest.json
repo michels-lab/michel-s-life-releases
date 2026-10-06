@@ -2,9 +2,9 @@
   "schema": 1,
   "appId": "com.michelslab.louderme",
   "channel": "sideload",
-  "versionCode": 4,
-  "versionName": "0.1.3",
-  "apkUrl": "",
-  "sha256": "",
-  "releaseNotes": "Bootstrap manifest for LouderMe direct updates. v0.1.4 will become the first stable-signed sideload baseline."
+  "versionCode": 5,
+  "versionName": "0.1.4",
+  "apkUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/download/louderme-v0.1.4/LouderMe-v0.1.4-sideload.apk",
+  "sha256": "7c4231e718fba60a74df0717a68f0f5ff0b9273b79194de501ffc41b4386958a",
+  "releaseNotes": "Stable Michel's Lab Direct build with automatic sideload update support."
 }
