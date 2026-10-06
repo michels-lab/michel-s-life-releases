@@ -17,6 +17,7 @@ concurrency:
 jobs:
   publish:
     name: Publish LouderMe signed APK
+    if: github.event.head_commit.message != 'release: clean LouderMe transfer staging'
     runs-on: ubuntu-latest
 
     steps:
