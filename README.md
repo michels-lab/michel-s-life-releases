@@ -30,6 +30,18 @@ Google Play builds use Google Play's update channel instead.
 
 See `louderme/README.md` for the direct-update contract.
 
+## LouderMe Desktop — Windows
+
+Official public Windows distribution channel for **LouderMe Desktop**.
+
+Normal releases can include:
+- `LouderMe-Setup-vX.Y.Z.exe` — recommended Windows installer;
+- `LouderMe-vX.Y.Z.exe` — portable self-contained build;
+- matching SHA-256 checksum files;
+- `louderme-desktop/latest.json` — machine-readable stable-channel manifest.
+
+LouderMe Desktop source remains private. The first Desktop release currently relies on SHA-256 integrity files and does not yet use Windows Authenticode publisher signing.
+
 ## Security
 
 Public availability of a binary does not make the proprietary application source open source.
