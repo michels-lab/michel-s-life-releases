@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "product": "LouderMe Desktop",
+  "platform": "windows-x64",
+  "channel": "stable",
+  "versionName": "0.1.0",
+  "installerUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/download/louderme-desktop-v0.1.0/LouderMe-Setup-v0.1.0.exe",
+  "installerSha256": "958a4e9545e20b7654b10331683958d9c8cd71ae64a1ef7b1492f2c1225a4a0f",
+  "portableUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/download/louderme-desktop-v0.1.0/LouderMe-v0.1.0.exe",
+  "portableSha256": "0e1832b282c5daa3c45e828ba5dcdab53dea3326b03a62c80a4422efccf499a8",
+  "releaseUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/tag/louderme-desktop-v0.1.0"
+}
