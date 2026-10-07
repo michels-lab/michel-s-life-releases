@@ -57,8 +57,16 @@ jobs:
           set -euo pipefail
           VERSION="${{ steps.meta.outputs.version }}"
 
-          PORTABLE="$(find staging -type f -name "LouderMe-v$VERSION.exe" | head -n 1)"
-          PORTABLE_SUM="$(find staging -type f -name "LouderMe-v$VERSION.exe.sha256" | head -n 1)"
+          PORTABLE="$(find staging -type f -name "LouderMe-Portable-v$VERSION.exe" | head -n 1)"
+          PORTABLE_SUM="$(find staging -type f -name "LouderMe-Portable-v$VERSION.exe.sha256" | head -n 1)"
+
+          # Backward-compatible transfer fallback for pre-v0.1.2 artifacts only.
+          if [ -z "$PORTABLE" ]; then
+            PORTABLE="$(find staging -type f -name "LouderMe-v$VERSION.exe" | head -n 1)"
+          fi
+          if [ -z "$PORTABLE_SUM" ]; then
+            PORTABLE_SUM="$(find staging -type f -name "LouderMe-v$VERSION.exe.sha256" | head -n 1)"
+          fi
           INSTALLER="$(find staging -type f -name "LouderMe-Setup-v$VERSION.exe" | head -n 1)"
           INSTALLER_SUM="$(find staging -type f -name "LouderMe-Setup-v$VERSION.exe.sha256" | head -n 1)"
           NOTES="$(find staging -type f -name "v$VERSION.md" | head -n 1)"
@@ -78,8 +86,8 @@ jobs:
           test "$INSTALLER_EXPECTED" = "$INSTALLER_ACTUAL"
 
           mkdir -p dist
-          cp "$PORTABLE" "dist/LouderMe-v$VERSION.exe"
-          cp "$PORTABLE_SUM" "dist/LouderMe-v$VERSION.exe.sha256"
+          cp "$PORTABLE" "dist/LouderMe-Portable-v$VERSION.exe"
+          cp "$PORTABLE_SUM" "dist/LouderMe-Portable-v$VERSION.exe.sha256"
           cp "$INSTALLER" "dist/LouderMe-Setup-v$VERSION.exe"
           cp "$INSTALLER_SUM" "dist/LouderMe-Setup-v$VERSION.exe.sha256"
           cp "$NOTES" "dist/RELEASE_NOTES.md"
@@ -97,10 +105,10 @@ jobs:
           TAG="louderme-desktop-v$VERSION"
 
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG"               "dist/LouderMe-v$VERSION.exe"               "dist/LouderMe-v$VERSION.exe.sha256"               "dist/LouderMe-Setup-v$VERSION.exe"               "dist/LouderMe-Setup-v$VERSION.exe.sha256"               --clobber
+            gh release upload "$TAG"               "dist/LouderMe-Portable-v$VERSION.exe"               "dist/LouderMe-Portable-v$VERSION.exe.sha256"               "dist/LouderMe-Setup-v$VERSION.exe"               "dist/LouderMe-Setup-v$VERSION.exe.sha256"               --clobber
             gh release edit "$TAG"               --title "LouderMe Desktop v$VERSION — Michel's Lab"               --notes-file dist/RELEASE_NOTES.md               --prerelease=false
           else
-            gh release create "$TAG"               "dist/LouderMe-v$VERSION.exe"               "dist/LouderMe-v$VERSION.exe.sha256"               "dist/LouderMe-Setup-v$VERSION.exe"               "dist/LouderMe-Setup-v$VERSION.exe.sha256"               --title "LouderMe Desktop v$VERSION — Michel's Lab"               --notes-file dist/RELEASE_NOTES.md
+            gh release create "$TAG"               "dist/LouderMe-Portable-v$VERSION.exe"               "dist/LouderMe-Portable-v$VERSION.exe.sha256"               "dist/LouderMe-Setup-v$VERSION.exe"               "dist/LouderMe-Setup-v$VERSION.exe.sha256"               --title "LouderMe Desktop v$VERSION — Michel's Lab"               --notes-file dist/RELEASE_NOTES.md
           fi
 
       - name: Update public Desktop latest.json
@@ -127,7 +135,7 @@ jobs:
               "versionName": "$VERSION",
               "installerUrl": "$BASE/LouderMe-Setup-v$VERSION.exe",
               "installerSha256": "$INSTALLER_SHA",
-              "portableUrl": "$BASE/LouderMe-v$VERSION.exe",
+              "portableUrl": "$BASE/LouderMe-Portable-v$VERSION.exe",
               "portableSha256": "$PORTABLE_SHA",
               "releaseUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/tag/$TAG"
           }
