@@ -3,10 +3,10 @@
   "product": "LouderMe Desktop",
   "platform": "windows-x64",
   "channel": "stable",
-  "versionName": "0.1.2",
-  "installerUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/download/louderme-desktop-v0.1.2/LouderMe-Setup-v0.1.2.exe",
-  "installerSha256": "a042c5471a4b733f8503e1a809b57025cca33f4ebc1e9f16fccac29e1db12d36",
-  "portableUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/download/louderme-desktop-v0.1.2/LouderMe-Portable-v0.1.2.exe",
-  "portableSha256": "ff4c465f2f48dfd2688ab67fbcd468ee04254ae457f3590f1e9d14b19ec07482",
-  "releaseUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/tag/louderme-desktop-v0.1.2"
+  "versionName": "0.1.3",
+  "installerUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/download/louderme-desktop-v0.1.3/LouderMe-Setup-v0.1.3.exe",
+  "installerSha256": "00f1a2a0ed289d47a4c36cfc09412ef6e721fd7c197c9201e60a635616acac39",
+  "portableUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/download/louderme-desktop-v0.1.3/LouderMe-Portable-v0.1.3.exe",
+  "portableSha256": "b5cec6f3ba79687242becff4d7b81683f79e6e413c931dbc4612ccb25765167c",
+  "releaseUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/tag/louderme-desktop-v0.1.3"
 }
