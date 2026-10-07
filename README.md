@@ -16,31 +16,25 @@ Normal releases can include:
 
 Michel's Life checks this public repository for newer official releases and verifies published checksums before applying direct updates.
 
-## LouderMe — Android direct / sideload
+## LouderMe — unified Android + Windows releases
 
-LouderMe source remains private. This repository exposes only what the direct updater needs:
+LouderMe source remains private. Its public GitHub release surface is unified: the current stable Android and Windows binaries live together on one LouderMe release page.
 
-- public release APKs signed with the stable Michel's Lab sideload key;
-- SHA-256 checksum files;
-- `louderme/latest.json` — machine-readable latest-version manifest.
-
-LouderMe direct builds check that manifest automatically, download the APK, verify its checksum, package identity, version and signing identity, then hand the verified package to Android's installer.
-
-Google Play builds use Google Play's update channel instead.
-
-See `louderme/README.md` for the direct-update contract.
-
-## LouderMe Desktop — Windows
-
-Official public Windows distribution channel for **LouderMe Desktop**.
-
-Normal releases can include:
+A unified release can contain:
+- `LouderMe-vA.B.C-sideload.apk` — Michel's Lab Direct Android build;
 - `LouderMe-Setup-vX.Y.Z.exe` — recommended Windows installer;
-- `LouderMe-vX.Y.Z.exe` — portable self-contained build;
-- matching SHA-256 checksum files;
-- `louderme-desktop/latest.json` — machine-readable stable-channel manifest.
+- `LouderMe-Portable-vX.Y.Z.exe` — optional Windows portable build;
+- matching SHA-256 checksum files for every binary.
 
-LouderMe Desktop source remains private. The first Desktop release currently relies on SHA-256 integrity files and does not yet use Windows Authenticode publisher signing.
+Android and Windows may keep different real platform versions. The unified release title/tag identifies both versions instead of pretending they are equal.
+
+Platform-specific updater manifests remain separate:
+- `louderme/latest.json` — Android direct/sideload feed;
+- `louderme-desktop/latest.json` — Windows stable feed.
+
+Both manifests point into the same unified public release. When only one platform changes, the publisher carries forward the current validated artifacts of the unchanged platform.
+
+Google Play builds still use Google Play's update channel. Windows Authenticode signing is not yet configured for LouderMe Desktop, so SmartScreen can still warn for an unsigned/new publisher binary.
 
 ## Security
 
