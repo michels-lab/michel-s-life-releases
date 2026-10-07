@@ -1,4 +1,4 @@
-name: Publish LouderMe Desktop Build
+name: Publish LouderMe Unified Release from Windows
 
 on:
   push:
@@ -11,12 +11,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: louderme-desktop-publish
+  group: louderme-unified-publish
   cancel-in-progress: false
 
 jobs:
   publish:
-    name: Publish LouderMe Desktop Windows release
+    name: Publish LouderMe Android + Windows bundle
     if: "${{ github.event.head_commit.message != 'release: clean LouderMe Desktop transfer staging' }}"
     runs-on: ubuntu-latest
 
@@ -24,49 +24,51 @@ jobs:
       - name: Check out release channel
         uses: actions/checkout@v5
 
-      - name: Read transfer metadata
+      - name: Read Windows transfer and current Android metadata
         id: meta
         shell: bash
         run: |
           set -euo pipefail
-          VERSION="$(jq -r '.versionName' louderme-desktop/bootstrap-transfer.json)"
+          WINDOWS_VERSION="$(jq -r '.versionName' louderme-desktop/bootstrap-transfer.json)"
           TRANSFER_URL="$(jq -r '.transferUrl' louderme-desktop/bootstrap-transfer.json)"
 
-          test -n "$VERSION"
-          test -n "$TRANSFER_URL"
-          test "$TRANSFER_URL" != "null"
+          ANDROID_VERSION="$(jq -r '.versionName' louderme/latest.json)"
+          ANDROID_VERSION_CODE="$(jq -r '.versionCode' louderme/latest.json)"
+          ANDROID_APK_URL="$(jq -r '.apkUrl' louderme/latest.json)"
+          ANDROID_SHA="$(jq -r '.sha256' louderme/latest.json)"
 
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          for value in "$WINDOWS_VERSION" "$TRANSFER_URL" "$ANDROID_VERSION" "$ANDROID_VERSION_CODE" "$ANDROID_APK_URL" "$ANDROID_SHA"; do
+            test -n "$value"
+            test "$value" != "null"
+          done
+
+          echo "windows_version=$WINDOWS_VERSION" >> "$GITHUB_OUTPUT"
           echo "transfer_url=$TRANSFER_URL" >> "$GITHUB_OUTPUT"
+          echo "android_version=$ANDROID_VERSION" >> "$GITHUB_OUTPUT"
+          echo "android_version_code=$ANDROID_VERSION_CODE" >> "$GITHUB_OUTPUT"
+          echo "android_apk_url=$ANDROID_APK_URL" >> "$GITHUB_OUTPUT"
+          echo "android_sha=$ANDROID_SHA" >> "$GITHUB_OUTPUT"
 
-      - name: Download validated Windows artifact
+      - name: Download validated Windows transfer
         env:
           TRANSFER_URL: ${{ steps.meta.outputs.transfer_url }}
         shell: bash
         run: |
           set -euo pipefail
           curl --fail --location --retry 3 "$TRANSFER_URL" --output transfer.zip
-          mkdir -p staging
+          mkdir -p staging dist
           unzip -q transfer.zip -d staging
           find staging -maxdepth 4 -type f -print
 
       - name: Verify transferred Windows binaries
-        id: verify
+        id: windows
         shell: bash
         run: |
           set -euo pipefail
-          VERSION="${{ steps.meta.outputs.version }}"
+          VERSION="${{ steps.meta.outputs.windows_version }}"
 
           PORTABLE="$(find staging -type f -name "LouderMe-Portable-v$VERSION.exe" | head -n 1)"
           PORTABLE_SUM="$(find staging -type f -name "LouderMe-Portable-v$VERSION.exe.sha256" | head -n 1)"
-
-          # Backward-compatible transfer fallback for pre-v0.1.2 artifacts only.
-          if [ -z "$PORTABLE" ]; then
-            PORTABLE="$(find staging -type f -name "LouderMe-v$VERSION.exe" | head -n 1)"
-          fi
-          if [ -z "$PORTABLE_SUM" ]; then
-            PORTABLE_SUM="$(find staging -type f -name "LouderMe-v$VERSION.exe.sha256" | head -n 1)"
-          fi
           INSTALLER="$(find staging -type f -name "LouderMe-Setup-v$VERSION.exe" | head -n 1)"
           INSTALLER_SUM="$(find staging -type f -name "LouderMe-Setup-v$VERSION.exe.sha256" | head -n 1)"
           NOTES="$(find staging -type f -name "v$VERSION.md" | head -n 1)"
@@ -85,74 +87,136 @@ jobs:
           test "$PORTABLE_EXPECTED" = "$PORTABLE_ACTUAL"
           test "$INSTALLER_EXPECTED" = "$INSTALLER_ACTUAL"
 
-          mkdir -p dist
           cp "$PORTABLE" "dist/LouderMe-Portable-v$VERSION.exe"
-          cp "$PORTABLE_SUM" "dist/LouderMe-Portable-v$VERSION.exe.sha256"
+          printf '%s  %s\n' "$PORTABLE_ACTUAL" "LouderMe-Portable-v$VERSION.exe" > "dist/LouderMe-Portable-v$VERSION.exe.sha256"
           cp "$INSTALLER" "dist/LouderMe-Setup-v$VERSION.exe"
-          cp "$INSTALLER_SUM" "dist/LouderMe-Setup-v$VERSION.exe.sha256"
-          cp "$NOTES" "dist/RELEASE_NOTES.md"
+          printf '%s  %s\n' "$INSTALLER_ACTUAL" "LouderMe-Setup-v$VERSION.exe" > "dist/LouderMe-Setup-v$VERSION.exe.sha256"
+          cp "$NOTES" "dist/WINDOWS_RELEASE_NOTES.md"
 
           echo "portable_sha256=$PORTABLE_ACTUAL" >> "$GITHUB_OUTPUT"
           echo "installer_sha256=$INSTALLER_ACTUAL" >> "$GITHUB_OUTPUT"
 
-      - name: Publish public LouderMe Desktop release
+      - name: Carry current Android build into unified release
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.meta.outputs.android_version }}"
+          APK="dist/LouderMe-v$VERSION-sideload.apk"
+
+          curl --fail --location --retry 3 "${{ steps.meta.outputs.android_apk_url }}" --output "$APK"
+          ACTUAL="$(sha256sum "$APK" | awk '{print $1}')"
+          test "$ACTUAL" = "${{ steps.meta.outputs.android_sha }}"
+          printf '%s  %s\n' "$ACTUAL" "LouderMe-v$VERSION-sideload.apk" > "$APK.sha256"
+
+      - name: Build unified release notes
+        shell: bash
+        run: |
+          AV="${{ steps.meta.outputs.android_version }}"
+          WV="${{ steps.meta.outputs.windows_version }}"
+          cat > dist/UNIFIED_RELEASE_NOTES.md <<EOF
+          # LouderMe unified stable release
+
+          This release keeps the current stable Android and Windows builds together on one public release page.
+
+          - Android: v$AV (versionCode ${{ steps.meta.outputs.android_version_code }})
+          - Windows Desktop: v$WV
+
+          ## Downloads
+          - Android direct/sideload APK
+          - Windows Setup installer (recommended)
+          - Windows Portable executable (secondary)
+          - SHA-256 checksum files for every binary
+
+          ## Windows v$WV notes
+          EOF
+          cat dist/WINDOWS_RELEASE_NOTES.md >> dist/UNIFIED_RELEASE_NOTES.md
+          cat >> dist/UNIFIED_RELEASE_NOTES.md <<EOF
+
+          ---
+          Michel's Lab keeps platform version lines explicit when they differ; this bundle does not pretend Android and Windows share the same version number.
+          EOF
+
+      - name: Publish unified public LouderMe release
+        id: release
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          VERSION="${{ steps.meta.outputs.version }}"
-          TAG="louderme-desktop-v$VERSION"
+          AV="${{ steps.meta.outputs.android_version }}"
+          WV="${{ steps.meta.outputs.windows_version }}"
+          TAG="louderme-android-v$AV-desktop-v$WV"
+          TITLE="LouderMe — Android v$AV + Windows v$WV"
+
+          ASSETS=(
+            "dist/LouderMe-v$AV-sideload.apk"
+            "dist/LouderMe-v$AV-sideload.apk.sha256"
+            "dist/LouderMe-Setup-v$WV.exe"
+            "dist/LouderMe-Setup-v$WV.exe.sha256"
+            "dist/LouderMe-Portable-v$WV.exe"
+            "dist/LouderMe-Portable-v$WV.exe.sha256"
+          )
 
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG"               "dist/LouderMe-Portable-v$VERSION.exe"               "dist/LouderMe-Portable-v$VERSION.exe.sha256"               "dist/LouderMe-Setup-v$VERSION.exe"               "dist/LouderMe-Setup-v$VERSION.exe.sha256"               --clobber
-            gh release edit "$TAG"               --title "LouderMe Desktop v$VERSION — Michel's Lab"               --notes-file dist/RELEASE_NOTES.md               --prerelease=false
+            gh release upload "$TAG" "${ASSETS[@]}" --clobber
+            gh release edit "$TAG" --title "$TITLE" --notes-file dist/UNIFIED_RELEASE_NOTES.md --prerelease=false
           else
-            gh release create "$TAG"               "dist/LouderMe-Portable-v$VERSION.exe"               "dist/LouderMe-Portable-v$VERSION.exe.sha256"               "dist/LouderMe-Setup-v$VERSION.exe"               "dist/LouderMe-Setup-v$VERSION.exe.sha256"               --title "LouderMe Desktop v$VERSION — Michel's Lab"               --notes-file dist/RELEASE_NOTES.md
+            gh release create "$TAG" "${ASSETS[@]}" --title "$TITLE" --notes-file dist/UNIFIED_RELEASE_NOTES.md
           fi
 
-      - name: Update public Desktop latest.json
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Point both public feeds to unified release
         shell: bash
         run: |
           set -euo pipefail
-          VERSION="${{ steps.meta.outputs.version }}"
-          PORTABLE_SHA="${{ steps.verify.outputs.portable_sha256 }}"
-          INSTALLER_SHA="${{ steps.verify.outputs.installer_sha256 }}"
-          TAG="louderme-desktop-v$VERSION"
+          AV="${{ steps.meta.outputs.android_version }}"
+          AVC="${{ steps.meta.outputs.android_version_code }}"
+          WV="${{ steps.meta.outputs.windows_version }}"
+          TAG="${{ steps.release.outputs.tag }}"
           BASE="https://github.com/realmichelduarte/michel-s-life-releases/releases/download/$TAG"
-
-          mkdir -p louderme-desktop
+          RELEASE_URL="https://github.com/realmichelduarte/michel-s-life-releases/releases/tag/$TAG"
 
           python3 - <<PY
           import json
           from pathlib import Path
 
-          payload = {
+          android = {
+              "schema": 1,
+              "appId": "com.michelslab.louderme",
+              "channel": "sideload",
+              "versionCode": int("$AVC"),
+              "versionName": "$AV",
+              "apkUrl": "$BASE/LouderMe-v$AV-sideload.apk",
+              "sha256": "${{ steps.meta.outputs.android_sha }}",
+              "releaseUrl": "$RELEASE_URL",
+              "releaseNotes": "Unified Michel's Lab release with current Android and Windows builds."
+          }
+
+          desktop = {
               "schema": 1,
               "product": "LouderMe Desktop",
               "platform": "windows-x64",
               "channel": "stable",
-              "versionName": "$VERSION",
-              "installerUrl": "$BASE/LouderMe-Setup-v$VERSION.exe",
-              "installerSha256": "$INSTALLER_SHA",
-              "portableUrl": "$BASE/LouderMe-Portable-v$VERSION.exe",
-              "portableSha256": "$PORTABLE_SHA",
-              "releaseUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/tag/$TAG"
+              "versionName": "$WV",
+              "installerUrl": "$BASE/LouderMe-Setup-v$WV.exe",
+              "installerSha256": "${{ steps.windows.outputs.installer_sha256 }}",
+              "portableUrl": "$BASE/LouderMe-Portable-v$WV.exe",
+              "portableSha256": "${{ steps.windows.outputs.portable_sha256 }}",
+              "releaseUrl": "$RELEASE_URL"
           }
 
-          Path("louderme-desktop/latest.json").write_text(
-              json.dumps(payload, indent=2) + "\n",
-              encoding="utf-8",
-          )
+          Path("louderme/latest.json").write_text(json.dumps(android, indent=2) + "\n", encoding="utf-8")
+          Path("louderme-desktop/latest.json").write_text(json.dumps(desktop, indent=2) + "\n", encoding="utf-8")
           PY
 
           git config user.name "Michel's Lab Release Bot"
           git config user.email "realmichelduarte@gmail.com"
-          git add louderme-desktop/latest.json
+          git add louderme/latest.json louderme-desktop/latest.json
 
           if git diff --cached --quiet; then
-            echo "Desktop latest.json already current"
+            echo "Unified feeds already current"
           else
-            git commit -m "release: LouderMe Desktop v$VERSION stable channel"
+            git commit -m "release: unify LouderMe Android $AV and Desktop $WV"
             git push
           fi
