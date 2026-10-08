@@ -1,0 +1,10 @@
+{
+  "authorized": true,
+  "owner_authorization": "dale release; 2026-10-08",
+  "version": "3.0.216",
+  "source_repository": "michels-lab/michel-s-life",
+  "transfer_tag": "michels-life-transfer-v3.0.216",
+  "public_tag": "v3.0.216",
+  "target": "Windows direct distribution only",
+  "notes": "Android Play signing and Microsoft Store distribution remain excluded. Verify SHA-256 before publication. Native installed app visual review and real Windows-Android Supabase tests remain open."
+}
