@@ -45,9 +45,13 @@ jobs:
           gh release download "desktop-v$WV" --repo michels-lab/LouderMe \
             --pattern "LouderMe-Portable-v$WV.exe*" --dir dist
 
+          # Android source checksum records its original validated/ prefix;
+          # normalize by comparing the digest, not by trusting the path string.
+          APK_EXPECTED="$(awk '{print $1}' "dist/LouderMe-v$AV-sideload.apk.sha256")"
+          APK_ACTUAL="$(sha256sum "dist/LouderMe-v$AV-sideload.apk" | awk '{print $1}')"
+          test "$APK_EXPECTED" = "$APK_ACTUAL"
           (
             cd dist
-            sha256sum -c "LouderMe-v$AV-sideload.apk.sha256"
             sha256sum -c "LouderMe-Setup-v$WV.exe.sha256"
             sha256sum -c "LouderMe-Portable-v$WV.exe.sha256"
           )
