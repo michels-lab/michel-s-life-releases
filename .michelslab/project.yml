@@ -1,15 +1,15 @@
 version: 1
 studio: "Michel's Lab"
 project: "Michel's Life Releases"
-repository: "realmichelduarte/michel-s-life-releases"
+repository: "michels-lab/michel-s-life-releases"
 role: "distribution"
 
 governance:
-  standards_repository: "realmichelduarte/Michel-Software-Standards"
+  standards_repository: "michels-lab/Michel-Software-Standards"
   reporting_mode: "polled_by_master"
   source_of_truth:
-    shared_rules: "realmichelduarte/Michel-Software-Standards"
-    project_implementation: "realmichelduarte/michel-s-life-releases"
+    shared_rules: "michels-lab/Michel-Software-Standards"
+    project_implementation: "michels-lab/michel-s-life-releases"
 
 reporting:
   project_logs:
