@@ -1,0 +1,13 @@
+{
+  "authorized": true,
+  "authorized_by": "Owner: latest Android must share same public release as Windows for every Michel's Lab app",
+  "windows_version": "3.0.216",
+  "android_version": "0.2.2",
+  "version_code": 4,
+  "source_repository": "michels-lab/michel-s-life",
+  "source_tag": "michels-life-android-transfer-v0.2.2",
+  "public_tag": "v3.0.216",
+  "current_windows_asset_preservation": true,
+  "android_signing": "CI debug/test signed; user-facing warning required",
+  "no_separate_public_android_release": true
+}
