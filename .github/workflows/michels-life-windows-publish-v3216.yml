@@ -1,0 +1,87 @@
+name: Publish Michel's Life Windows v3.0.216 from verified source assets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'michels-life/windows-v3.0.216-publication.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: michels-life-windows-v3.0.216-publication
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Check checksums and publish Windows Setup + Portable + AppBundle
+    if: >-
+      github.repository == 'michels-lab/michel-s-life-releases' &&
+      github.ref == 'refs/heads/main' &&
+      startsWith(github.event.head_commit.message, '[publish public windows v3.0.216]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate narrowly scoped owner authorization
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('michels-life/windows-v3.0.216-publication.json').read_text())
+          assert r['authorized'] is True
+          assert r['version'] == '3.0.216'
+          assert r['source_repository'] == 'michels-lab/michel-s-life'
+          assert r['transfer_tag'] == 'michels-life-transfer-v3.0.216'
+          assert r['public_tag'] == 'v3.0.216'
+          print('Authorized Michel\'s Life Windows v3.0.216 publication')
+          PY
+      - name: Download staged source release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          gh release download michels-life-transfer-v3.0.216 --repo michels-lab/michel-s-life --dir dist
+          find dist -maxdepth 1 -type f -printf '%f\n' | sort
+      - name: Verify all Windows asset checksums and release-note provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in MichelsLife-Setup-v3.0.216.exe MichelsLife-Portable-v3.0.216.exe MichelsLife-v3.0.216.exe; do
+            test -s "dist/$name"
+            test -s "dist/$name.sha256"
+            expected="$(awk '{print $1}' "dist/$name.sha256" | tr -d '\r')"
+            actual="$(sha256sum "dist/$name" | awk '{print $1}')"
+            if [ "$expected" != "$actual" ]; then
+              echo "::error::SHA-256 mismatch for $name"
+              exit 1
+            fi
+          done
+          test -s dist/AppBundle.zip
+          test -s dist/michels_life_icon.ico
+          test -s dist/v3.0.216.md
+          cmp dist/MichelsLife-Portable-v3.0.216.exe dist/MichelsLife-v3.0.216.exe
+          echo "All three Windows binaries integrity-verified; portable updater alias is byte-identical"
+
+      - name: Publish immutable verified binaries on official channel
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view v3.0.216 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::error::Refusing to overwrite an existing public v3.0.216 release"
+            exit 1
+          fi
+          gh release create v3.0.216 \
+            dist/MichelsLife-Setup-v3.0.216.exe \
+            dist/MichelsLife-Setup-v3.0.216.exe.sha256 \
+            dist/MichelsLife-Portable-v3.0.216.exe \
+            dist/MichelsLife-Portable-v3.0.216.exe.sha256 \
+            dist/MichelsLife-v3.0.216.exe \
+            dist/MichelsLife-v3.0.216.exe.sha256 \
+            dist/AppBundle.zip dist/michels_life_icon.ico \
+            --repo "$GITHUB_REPOSITORY" --title "Michel's Life v3.0.216" --notes-file dist/v3.0.216.md
+          echo "Published Michel's Life v3.0.216 to official public channel"
