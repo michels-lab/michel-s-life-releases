@@ -174,8 +174,8 @@ jobs:
           AVC="${{ steps.meta.outputs.android_version_code }}"
           WV="${{ steps.meta.outputs.windows_version }}"
           TAG="${{ steps.release.outputs.tag }}"
-          BASE="https://github.com/realmichelduarte/michel-s-life-releases/releases/download/$TAG"
-          RELEASE_URL="https://github.com/realmichelduarte/michel-s-life-releases/releases/tag/$TAG"
+          BASE="https://github.com/michels-lab/michel-s-life-releases/releases/download/$TAG"
+          RELEASE_URL="https://github.com/michels-lab/michel-s-life-releases/releases/tag/$TAG"
 
           python3 - <<PY
           import json
