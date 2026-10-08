@@ -2,10 +2,10 @@
   "schema": 1,
   "appId": "com.michelslab.louderme",
   "channel": "sideload",
-  "versionCode": 10,
-  "versionName": "0.1.9",
-  "apkUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/download/louderme-android-v0.1.9-desktop-v0.1.4/LouderMe-v0.1.9-sideload.apk",
-  "sha256": "1c368d5c4c76d3622f1da132e335243cfa70e6ab8d4583c3b1f457ae8b328e64",
-  "releaseUrl": "https://github.com/realmichelduarte/michel-s-life-releases/releases/tag/louderme-android-v0.1.9-desktop-v0.1.4",
-  "releaseNotes": "Unified Michel's Lab release with current Android and Windows builds."
+  "versionCode": 11,
+  "versionName": "0.1.10",
+  "apkUrl": "https://github.com/michels-lab/michel-s-life-releases/releases/download/louderme-android-v0.1.10-desktop-v0.1.5/LouderMe-v0.1.10-sideload.apk",
+  "sha256": "de092ebbc9516395a588f22092075ac7293d291a0f49d3655773b5c6bba1be38",
+  "releaseUrl": "https://github.com/michels-lab/michel-s-life-releases/releases/tag/louderme-android-v0.1.10-desktop-v0.1.5",
+  "releaseNotes": "Michel's Lab unified stable release."
 }
