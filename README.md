@@ -2,19 +2,20 @@
 
 This public repository distributes installable binaries and update feeds for selected **Michel's Lab** applications. Application source code and development history live in their own repositories.
 
-## Michel's Life — Windows
+## Michel's Life — unified Windows + Android release
 
-Official Windows distribution channel for **Michel's Life**, an RPG-inspired productivity and life-management desktop app.
+**One public release page per product, with current Windows and Android binaries together:** https://github.com/michels-lab/michel-s-life-releases/releases/tag/v3.0.216
 
-Normal releases can include:
+- **Windows v3.0.216:** `MichelsLife-Setup-v3.0.216.exe` is the recommended installer; `MichelsLife-Portable-v3.0.216.exe` is optional; `MichelsLife-v3.0.216.exe` is a byte-identical legacy updater alias. Each executable has its SHA-256 sidecar.
+- **Android v0.2.2, versionCode 4:** `MichelsLife-Android-v0.2.2-TEST.apk` plus SHA-256 and signing/provenance metadata, on that SAME `v3.0.216` release.
+- `AppBundle.zip` and `michels_life_icon.ico` remain internal/branding assets for the Windows bootstrap.
 
-- `MichelsLife-Setup-vX.Y.Z.exe` — recommended Windows installer
-- `MichelsLife-vX.Y.Z.exe` — portable build
-- `MichelsLife-vX.Y.Z.exe.sha256` — SHA-256 checksum
-- `AppBundle.zip` — internal bootstrap bundle
-- `michels_life_icon.ico`
+**Android signing warning:** The latest v0.2.2 APK is currently **debug/test signed**, not a permanent release-signed APK or Google Play publication. It may not install over an APK with a different signing certificate. Back up existing app data before any uninstall; do not present the test APK as a production-signed upgrade.
 
-Michel's Life checks this public repository for newer official releases and verifies published checksums before applying direct updates.
+For EVERY multi-platform Michel's Lab app the public binary release must include all shipped platforms together, with real independent platform version numbers. When just one platform changes, carry forward the other platform's verified current assets. CI artifacts and separate store submissions are not substitute public releases.
+
+Michel's Life direct-updater Windows checks this public repository for newer official releases and verifies published checksums before applying direct updates. Google Play and Microsoft Store are separate provider-managed channels.
+
 
 ## LouderMe — unified Android + Windows releases
 
