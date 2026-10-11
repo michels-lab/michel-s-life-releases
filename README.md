@@ -1,6 +1,6 @@
-# Michel's Lab — Public Release Channels
+# Michel's Life — Official Public Releases
 
-This public repository distributes installable binaries and update feeds for selected **Michel's Lab** applications. Application source code and development history live in their own repositories.
+This public repository is the official customer-facing binary/update channel exclusively for **Michel's Life**. Application source code and development history live in the separate app repository.
 
 ## Michel's Life — unified Windows + Android release
 
@@ -17,25 +17,13 @@ For EVERY multi-platform Michel's Lab app the public binary release must include
 Michel's Life direct-updater Windows checks this public repository for newer official releases and verifies published checksums before applying direct updates. Google Play and Microsoft Store are separate provider-managed channels.
 
 
-## LouderMe — unified Android + Windows releases
+## Historical LouderMe compatibility only
 
-LouderMe source remains private. Its public GitHub release surface is unified: the current stable Android and Windows binaries live together on one LouderMe release page.
+LouderMe has moved to its independent official public channel: **https://github.com/michels-lab/LouderME-Releases**. New releases of LouderMe must never be published here.
 
-A unified release can contain:
-- `LouderMe-vA.B.C-sideload.apk` — Michel's Lab Direct Android build;
-- `LouderMe-Setup-vX.Y.Z.exe` — recommended Windows installer;
-- `LouderMe-Portable-vX.Y.Z.exe` — optional Windows portable build;
-- matching SHA-256 checksum files for every binary.
+Previously distributed LouderMe versions embedded these two legacy updater manifest URLs: `louderme/latest.json` and `louderme-desktop/latest.json`. Those files now point to the *verified independent LouderMe release*, retaining in-place upgrade compatibility for installed clients. They are not additional LouderMe publication channels.
 
-Android and Windows may keep different real platform versions. The unified release title/tag identifies both versions instead of pretending they are equal.
-
-Platform-specific updater manifests remain separate:
-- `louderme/latest.json` — Android direct/sideload feed;
-- `louderme-desktop/latest.json` — Windows stable feed.
-
-Both manifests point into the same unified public release. When only one platform changes, the publisher carries forward the current validated artifacts of the unchanged platform.
-
-Google Play builds still use Google Play's update channel. Windows Authenticode signing is not yet configured for LouderMe Desktop, so SmartScreen can still warn for an unsigned/new publisher binary.
+Historical LouderMe tags and their pinned binary download URLs are retained temporarily to avoid breaking external legacy links. All three old LouderMe publisher workflows have been retired. Historical entries are not evidence of active mixed publishing.
 
 ## Security
 
