@@ -7,10 +7,10 @@ This public repository distributes installable binaries and update feeds for sel
 **One public release page per product, with current Windows and Android binaries together:** https://github.com/michels-lab/michel-s-life-releases/releases/tag/v3.0.216
 
 - **Windows v3.0.216:** `MichelsLife-Setup-v3.0.216.exe` is the recommended installer; `MichelsLife-Portable-v3.0.216.exe` is optional; `MichelsLife-v3.0.216.exe` is a byte-identical legacy updater alias. Each executable has its SHA-256 sidecar.
-- **Android v0.2.2, versionCode 4:** `MichelsLife-Android-v0.2.2-TEST.apk` plus SHA-256 and signing/provenance metadata, on that SAME `v3.0.216` release.
+- **Android Direct v0.2.3, versionCode 5:** `MichelsLife-Android-Direct-v0.2.3.apk` is the permanently owner-signed direct installer with SHA-256 and signing/provenance metadata, on the SAME `v3.0.216` release.
 - `AppBundle.zip` and `michels_life_icon.ico` remain internal/branding assets for the Windows bootstrap.
 
-**Android signing warning:** The latest v0.2.2 APK is currently **debug/test signed**, not a permanent release-signed APK or Google Play publication. It may not install over an APK with a different signing certificate. Back up existing app data before any uninstall; do not present the test APK as a production-signed upgrade.
+**Android upgrade warning:** The older v0.2.2 TEST APK was signed with a temporary debug certificate. The current **permanently signed** Direct v0.2.3 APK may **not** update that TEST installation in place; export/back up existing app data and verify recoverability before any uninstall/reinstall. Keep the current Direct signing key for all future direct updates. Google Play and Microsoft Store publication are separate from this direct GitHub release.
 
 For EVERY multi-platform Michel's Lab app the public binary release must include all shipped platforms together, with real independent platform version numbers. When just one platform changes, carry forward the other platform's verified current assets. CI artifacts and separate store submissions are not substitute public releases.
 
