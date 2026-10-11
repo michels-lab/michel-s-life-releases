@@ -1,1 +1,0 @@
-Correct the source_repo field of the verified 2026-10-11 unified Michel's Life release-provenance.json, preserve all signed binaries and checksums. Release v3.0.217. Source SHA 05ccaa52c2899ba969d2d0ad396669d2552b0f2f. Source run 38175360615, destination publishing run 38176304417.
