@@ -24,7 +24,7 @@ jobs:
       RELEASE_REPO: michels-lab/michel-s-life-releases
       WINDOWS_TAG: v3.0.216
       TRANSFER_TAG: michelslife-android-direct-transfer-v0.2.3
-      ANDROID_CERT_PIN: a01a0540165a00cd228a5fc78adc855bd1c1e6b8195391769c219d76ebd582f2
+      ANDROID_CERT_PIN: 36a9f5144243d14ebade9d38559cfd7d4d9207c1edba01e6f0fbdd5f076a50fa
     steps:
       - uses: actions/checkout@v4
       - name: Fetch proven production-signed Android APK and preexisting Windows release
