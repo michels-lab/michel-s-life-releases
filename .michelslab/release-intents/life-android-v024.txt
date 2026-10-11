@@ -1,0 +1,12 @@
+Michel's Life unified public release — Windows v3.0.216 + permanent-signed Android Direct v0.2.4 (versionCode 6)
+Approved customer publication: both platforms on the SAME public GitHub release tag v3.0.216.
+Verified source repository: michels-lab/michel-s-life
+Verified source commit: c495f0c0a04a5ab818d7b405128ae1f8561788b9
+Verified successful signed Android stage run: 38131405194
+Verified internal transfer prerelease: michelslife-android-direct-transfer-v0.2.4
+Android package: com.michelslab.michelslife, versionName 0.2.4, versionCode 6.
+Signer: owner's unchanged independent Direct key with public cert SHA-256 36a9f5144243d14ebade9d38559cfd7d4d9207c1edba01e6f0fbdd5f076a50fa.
+Require independent customer-binary signature, version, checksum, source provenance and post-publish verification; fail closed otherwise.
+Keep the existing Windows v3.0.216 EXE installers, AppBundle.zip, icon and SHA256 hashes intact. Supersede old Android v0.2.3 assets.
+This update adds Android-first navigation, quick capture, Focus, Dashboard/Settings fixes, Missions/Calendar/Journal mobile layouts, and a shared cloud storage credentials boundary.
+Unverified: real-device Galaxy visual/IME check, native background alarm service, live Windows-to-Galaxy Supabase account sync.
