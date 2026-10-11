@@ -1,0 +1,107 @@
+name: Remove migrated LouderMe releases from Michel's Life
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'maintenance/REMOVE_MIGRATED_LOUDERME_RELEASES.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: life-product-exclusive-release-cleanup
+  cancel-in-progress: false
+
+jobs:
+  remove-migrated:
+    if: github.repository == 'michels-lab/michel-s-life-releases'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_REPO: michels-lab/michel-s-life-releases
+      DEST_REPO: michels-lab/LouderME-Releases
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify full copies before touching old releases
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = "$SOURCE_REPO"
+          gh api "repos/$SOURCE_REPO/releases?per_page=100" > /tmp/source.json
+          gh api "repos/$DEST_REPO/releases?per_page=100" > /tmp/destination.json
+          python3 - <<'PY'
+          import json, pathlib
+          source = json.load(open('/tmp/source.json'))
+          destination = json.load(open('/tmp/destination.json'))
+          expected = {
+              'louderme-android-v0.1.10-desktop-v0.1.11',
+              'louderme-android-v0.1.10-desktop-v0.1.5',
+              'louderme-android-v0.1.9-desktop-v0.1.4',
+              'louderme-desktop-v0.1.0',
+              'louderme-desktop-v0.1.1',
+              'louderme-desktop-v0.1.2',
+              'louderme-desktop-v0.1.3',
+              'louderme-v0.1.4',
+              'louderme-v0.1.5',
+              'louderme-v0.1.6',
+              'louderme-v0.1.7',
+              'louderme-v0.1.8',
+              'louderme-v0.1.9',
+          }
+          old = {r['tag_name']: r for r in source if r['tag_name'].startswith('louderme-')}
+          new = {r['tag_name']: r for r in destination}
+          if set(old) != expected:
+              raise SystemExit(f'Unexpected source LouderMe tags, REFUSING cleanup: {set(old)^expected}')
+          for tag, original in old.items():
+              target = new.get(tag)
+              if not target:
+                  raise SystemExit(f'No migration target for {tag}')
+              def manifest(release):
+                  return {
+                      a['name']: (a['size'],a.get('digest'))
+                      for a in release['assets']
+                  }
+              if not original['assets'] or manifest(original) != manifest(target):
+                  raise SystemExit(f'Binary asset digest or size differs: {tag}')
+          for path in ('louderme/latest.json', 'louderme-desktop/latest.json'):
+              data = json.loads(pathlib.Path(path).read_text())
+              asset_url = data['apkUrl'] if path.startswith('louderme/') else data['installerUrl']
+              if not asset_url.startswith(
+                  'https://github.com/michels-lab/LouderME-Releases/releases/download/'
+              ):
+                  raise SystemExit(f'Legacy installed-client manifest no longer points to dedicated product: {path}')
+          pathlib.Path('/tmp/approved-tags.txt').write_text('\n'.join(sorted(expected))+'\n')
+          print(f'APPROVED: {len(old)} release copies verified against size + digest')
+          PY
+      - name: Delete only migrated LouderMe releases and their old tags
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r tag; do
+            test -n "$tag"
+            case "$tag" in louderme-*) ;; *) echo "Refusing non-LouderMe tag"; exit 1;; esac
+            gh release delete "$tag" --repo "$SOURCE_REPO" --cleanup-tag --yes
+            echo "REMOVED_FROM_LIFE_REPO: $tag"
+          done < /tmp/approved-tags.txt
+      - name: Fail if any LouderMe releases remain in Michel's Life
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$SOURCE_REPO/releases?per_page=100" > /tmp/source-after.json
+          python3 - <<'PY'
+          import json
+          releases = json.load(open('/tmp/source-after.json'))
+          foreign = [r['tag_name'] for r in releases if r['tag_name'].startswith('louderme-')]
+          if foreign:
+              raise SystemExit(f'Unwanted LouderMe releases remain: {foreign}')
+          life = [r['tag_name'] for r in releases if r['tag_name'].startswith('v3.')]
+          if 'v3.0.216' not in life:
+              raise SystemExit('Michel’s Life v3.0.216 release missing: abort')
+          print('VERIFIED: no LouderMe releases left in Michel’s Life; Michel’s Life releases intact')
+          PY
+          latest="$(gh api "repos/$SOURCE_REPO/releases/latest" --jq .tag_name)"
+          test "$latest" = "v3.0.216"
+          echo "LATEST_OK: $latest"
