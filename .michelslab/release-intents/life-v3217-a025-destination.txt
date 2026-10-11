@@ -1,0 +1,6 @@
+Authorized source release run: 38175360615
+Expected source SHA: 05ccaa52c2899ba969d2d0ad396669d2552b0f2f
+Target: Michel's Life Windows v3.0.217 + Android Direct v0.2.5, unified verified release
+Why: source RELEASES_REPO_TOKEN returned 403 despite green exact-source CI, signed Android build, Windows install/launch, Android 16 install/relaunch.
+Permission model: destination's native GitHub Actions GITHUB_TOKEN writes only its own public release repository.
+Required: verify SHA, all source jobs and binary signatures/digests again before publication.
