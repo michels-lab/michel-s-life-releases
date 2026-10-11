@@ -1,0 +1,8 @@
+Michel's Life unified public release update — 2026-10-10
+Windows version: 3.0.216 (preserve existing verified Windows binaries and AppBundle)
+Android Direct version: 0.2.3 versionCode 5
+Source repository: michels-lab/michel-s-life
+Verified source SHA: 2ec3bdbab896bf693a31b6e359ab103313deae42
+Transfer tag: michelslife-android-direct-transfer-v0.2.3
+Production APK signed with owner-controlled permanent Direct certificate; independent exact binary/manifest/hash checks mandatory.
+Public release tag remains v3.0.216 with latest Windows and Android together; do not create a split Android customer release.
