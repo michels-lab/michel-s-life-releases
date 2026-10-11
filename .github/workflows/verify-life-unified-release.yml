@@ -71,7 +71,7 @@ jobs:
               .versionName=="0.2.3" and .versionCode==5
               and .platform=="android" and .package=="com.michelslab.michelslife"
               and .distribution=="production-signed"
-              and .signerCertSha256=="a01a0540165a00cd228a5fc78adc855bd1c1e6b8195391769c219d76ebd582f2"
+              and .signerCertSha256=="36a9f5144243d14ebade9d38559cfd7d4d9207c1edba01e6f0fbdd5f076a50fa"
             ' android-v0.2.3-manifest.json
             test "$(sha256sum MichelsLife-Android-Direct-v0.2.3.apk | awk '{print $1}')" = \
                  "$(jq -r .sha256 android-v0.2.3-manifest.json)"
