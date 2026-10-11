@@ -15,6 +15,7 @@ concurrency:
   group: michelslife-v3217-a025-publication
   cancel-in-progress: false
 
+jobs:
   publish:
     if: github.repository == 'michels-lab/michel-s-life-releases'
     runs-on: ubuntu-latest
@@ -28,7 +29,7 @@ concurrency:
       SOURCE: michels-lab/michel-s-life
       SOURCE_RUN: '38175360615'
       SOURCE_SHA: '05ccaa52c2899ba969d2d0ad396669d2552b0f2f'
-      ANDROID_CERT_PIN: ${{ vars.ANDROID_DIRECT_CERT_SHA256 }}
+      ANDROID_CERT_PIN: 36a9f5144243d14ebade9d38559cfd7d4d9207c1edba01e6f0fbdd5f076a50fa
     steps:
       - uses: actions/checkout@v4
       - name: Verify public source run, commit and native install success
