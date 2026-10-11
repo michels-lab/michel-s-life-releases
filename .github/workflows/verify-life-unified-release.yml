@@ -8,6 +8,7 @@ on:
       - 'README.md'
       - '.github/workflows/verify-life-unified-release.yml'
       - '.github/workflows/publish-life-unified-android-v023.yml'
+      - '.github/workflows/publish-life-unified-android-v024.yml'
 
 permissions:
   contents: read
@@ -34,7 +35,18 @@ jobs:
             AppBundle.zip michels_life_icon.ico; do
             grep -Fxq "$name" assets.txt || { echo "::error::Windows release missing $name"; exit 1; }
           done
-          if grep -Fxq 'MichelsLife-Android-Direct-v0.2.3.apk' assets.txt; then
+          if grep -Fxq 'MichelsLife-Android-Direct-v0.2.4.apk' assets.txt; then
+            echo "current_android=0.2.4" >> "$GITHUB_ENV"
+            jq -e '.name | contains("Windows v3.0.216 + Android v0.2.4")' release.json
+            for name in MichelsLife-Android-Direct-v0.2.4.apk \
+              MichelsLife-Android-Direct-v0.2.4.apk.sha256 \
+              android-v0.2.4-manifest.json android-signing-certificate-v0.2.4.txt; do
+              grep -Fxq "$name" assets.txt || { echo "::error::Missing Android v0.2.4 signed asset $name"; exit 1; }
+            done
+            if grep -Eq 'Android.*v0[.]2[.](2|3)|android-v0[.]2[.](2|3)' assets.txt; then
+              echo "::error::Old APK or metadata retained beside v0.2.4"; exit 1
+            fi
+          elif grep -Fxq 'MichelsLife-Android-Direct-v0.2.3.apk' assets.txt; then
             echo "current_android=0.2.3" >> "$GITHUB_ENV"
             jq -e '.name | contains("Windows v3.0.216 + Android v0.2.3")' release.json
             for name in MichelsLife-Android-Direct-v0.2.3.apk \
@@ -61,7 +73,22 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p verify
-          if [[ "$current_android" == "0.2.3" ]]; then
+          if [[ "$current_android" == "0.2.4" ]]; then
+            gh release download v3.0.216 --repo michels-lab/michel-s-life-releases --dir verify \
+              --pattern 'MichelsLife-Android-Direct-v0.2.4.apk*' \
+              --pattern 'android-v0.2.4-manifest.json'
+            cd verify
+            sha256sum -c MichelsLife-Android-Direct-v0.2.4.apk.sha256
+            jq -e '
+              .versionName=="0.2.4" and .versionCode==6
+              and .platform=="android" and .package=="com.michelslab.michelslife"
+              and .distribution=="production-signed"
+              and .signerCertSha256=="36a9f5144243d14ebade9d38559cfd7d4d9207c1edba01e6f0fbdd5f076a50fa"
+            ' android-v0.2.4-manifest.json
+            test "$(sha256sum MichelsLife-Android-Direct-v0.2.4.apk | awk '{print $1}')" = \
+                 "$(jq -r .sha256 android-v0.2.4-manifest.json)"
+            echo "PASS: unified public Windows 3.0.216 + current signed Android Direct 0.2.4"
+          elif [[ "$current_android" == "0.2.3" ]]; then
             gh release download v3.0.216 --repo michels-lab/michel-s-life-releases --dir verify \
               --pattern 'MichelsLife-Android-Direct-v0.2.3.apk*' \
               --pattern 'android-v0.2.3-manifest.json'
