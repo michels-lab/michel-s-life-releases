@@ -1,0 +1,77 @@
+name: Correct v3.0.217 release provenance only (one-time)
+
+on:
+  push:
+    branches: [main]
+    paths: ['.michelslab/release-intents/correct-v3217-provenance.txt']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  correction:
+    if: github.repository == 'michels-lab/michel-s-life-releases'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: v3.0.217
+      EXPECTED_SOURCE: michels-lab/michel-s-life
+      EXPECTED_SHA: 05ccaa52c2899ba969d2d0ad396669d2552b0f2f
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify original public release and previous asset hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" > pre.json
+          jq -e '.draft==false and .prerelease==false and (.assets|length)==13' pre.json
+          mkdir -p provenance
+          gh release download "$TAG" --pattern 'release-provenance.json' --dir provenance
+          python3 - <<'PY'
+          import json,os,pathlib
+          manifest=json.loads(pathlib.Path('provenance/release-provenance.json').read_text())
+          release=json.load(open('pre.json'))
+          if manifest.get('source_sha') != os.environ['EXPECTED_SHA']:
+              raise SystemExit('Wrong candidate source SHA')
+          if manifest.get('source_repo') not in (os.environ['EXPECTED_SOURCE'],os.environ['GITHUB_REPOSITORY']):
+              raise SystemExit('Unexpected provenance origin; refusing change')
+          actual={a['name']: a.get('digest') for a in release['assets']}
+          for name, sha in manifest['assets_sha256'].items():
+              if actual.get(name) != 'sha256:'+sha:
+                  raise SystemExit(f'Public release hash differs for {name}')
+          if 'MichelsLife-Setup-v3.0.217.exe' not in actual or 'MichelsLife-Android-Direct-v0.2.5.apk' not in actual:
+              raise SystemExit('Incomplete public multi-platform release')
+          manifest['source_repo']=os.environ['EXPECTED_SOURCE']
+          manifest['source_run']=38175360615
+          manifest['publisher']='michels-lab/michel-s-life-releases'
+          manifest['publisher_run']=38176304417
+          pathlib.Path('provenance/release-provenance.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          pathlib.Path('expected-binary-digests.json').write_text(json.dumps({k:v for k,v in actual.items() if k!='release-provenance.json'},indent=2)+'\n')
+          print('VERIFIED exact-source evidence; correcting metadata only, no binaries')
+          PY
+      - name: Replace only metadata sidecar
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release upload "$TAG" provenance/release-provenance.json --clobber
+      - name: Confirm source identity and unchanged binary hashes after upload
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p recheck
+          gh release download "$TAG" --pattern 'release-provenance.json' --dir recheck
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" > after.json
+          python3 - <<'PY'
+          import json,os
+          original=json.load(open('expected-binary-digests.json'))
+          current={a['name']:a.get('digest') for a in json.load(open('after.json'))['assets']}
+          for name,digest in original.items():
+              if current.get(name)!=digest: raise SystemExit(f'Binary/sidecar unexpectedly changed: {name}')
+          meta=json.load(open('recheck/release-provenance.json'))
+          if meta['source_repo'] != os.environ['EXPECTED_SOURCE'] or meta['source_sha'] != os.environ['EXPECTED_SHA']:
+              raise SystemExit('Published source identity mismatch')
+          if meta.get('publisher_run')!=38176304417 or meta.get('source_run')!=38175360615:
+              raise SystemExit('Wrong release evidence')
+          print('PASS: exact source provenance fixed; all 12 original binary/checksum/metadata asset digests unchanged')
+          PY
