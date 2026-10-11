@@ -1,4 +1,4 @@
-name: Verify Michel's Life public unified Windows + Android release
+name: Verify Michel's Life public unified Windows + latest Android release
 
 on:
   workflow_dispatch:
@@ -7,61 +7,81 @@ on:
     paths:
       - 'README.md'
       - '.github/workflows/verify-life-unified-release.yml'
+      - '.github/workflows/publish-life-unified-android-v023.yml'
 
 permissions:
   contents: read
 
 jobs:
   verify:
-    name: Verify real public assets, distinct platform versions and checksums
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verify public release lists Windows v3.0.216 and current Android v0.2.2
+      - name: Verify existing latest Windows artifacts and exclusive Android version
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
           REPO=michels-lab/michel-s-life-releases
-          gh release view v3.0.216 --repo "$REPO" --json assets,name,isPrerelease,isDraft --jq . > release.json
-          jq -e '.name | contains("Windows v3.0.216 + Android v0.2.2")' release.json
-          jq -e '.isPrerelease == false and .isDraft == false' release.json
-          jq -r '.assets[].name' release.json | sort > published-assets.txt
+          gh release view v3.0.216 --repo "$REPO" --json assets,name,isPrerelease,isDraft > release.json
+          jq -e '.isDraft==false and .isPrerelease==false' release.json
+          jq -r '.assets[].name' release.json | sort > assets.txt
           for name in \
-            MichelsLife-Setup-v3.0.216.exe \
-            MichelsLife-Setup-v3.0.216.exe.sha256 \
-            MichelsLife-Portable-v3.0.216.exe \
-            MichelsLife-Portable-v3.0.216.exe.sha256 \
-            MichelsLife-v3.0.216.exe \
-            MichelsLife-v3.0.216.exe.sha256 \
-            AppBundle.zip michels_life_icon.ico \
-            MichelsLife-Android-v0.2.2-TEST.apk \
-            MichelsLife-Android-v0.2.2-TEST.apk.sha256 \
-            android-v0.2.2-manifest.json android-signing-certificate.txt; do
-            grep -Fxq "$name" published-assets.txt || { echo "::error::Public unified release missing $name"; exit 1; }
+            MichelsLife-Setup-v3.0.216.exe MichelsLife-Setup-v3.0.216.exe.sha256 \
+            MichelsLife-Portable-v3.0.216.exe MichelsLife-Portable-v3.0.216.exe.sha256 \
+            MichelsLife-v3.0.216.exe MichelsLife-v3.0.216.exe.sha256 \
+            AppBundle.zip michels_life_icon.ico; do
+            grep -Fxq "$name" assets.txt || { echo "::error::Windows release missing $name"; exit 1; }
           done
-          if grep -E '^MichelsLife-Android-v0\.2\.1' published-assets.txt; then
-            echo "::error::Obsolete Android v0.2.1 found on current unified release"
-            exit 1
+          if grep -Fxq 'MichelsLife-Android-Direct-v0.2.3.apk' assets.txt; then
+            echo "current_android=0.2.3" >> "$GITHUB_ENV"
+            jq -e '.name | contains("Windows v3.0.216 + Android v0.2.3")' release.json
+            for name in MichelsLife-Android-Direct-v0.2.3.apk \
+              MichelsLife-Android-Direct-v0.2.3.apk.sha256 \
+              android-v0.2.3-manifest.json android-signing-certificate-v0.2.3.txt; do
+              grep -Fxq "$name" assets.txt || { echo "::error::Missing Android v0.2.3 production asset $name"; exit 1; }
+            done
+            if grep -Eq 'Android.*v0[.]2[.]2|android-v0[.]2[.]2' assets.txt; then
+              echo "::error::Old debug APK still appears on current Android product release"; exit 1
+            fi
+          else
+            echo "current_android=0.2.2" >> "$GITHUB_ENV"
+            jq -e '.name | contains("Windows v3.0.216 + Android v0.2.2")' release.json
+            for name in MichelsLife-Android-v0.2.2-TEST.apk \
+              MichelsLife-Android-v0.2.2-TEST.apk.sha256 android-v0.2.2-manifest.json android-signing-certificate.txt; do
+              grep -Fxq "$name" assets.txt || { echo "::error::Published pre-migration Android TEST asset missing: $name"; exit 1; }
+            done
           fi
-          echo "Public release names, contents and both version lines verified"
-      - name: Verify downloadable Android APK actual SHA-256 against public sidecar
+
+      - name: Verify actual latest APK downloaded from public release
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p verify
-          gh release download v3.0.216 --repo michels-lab/michel-s-life-releases --dir verify \
-            --pattern 'MichelsLife-Android-v0.2.2-TEST.apk*' \
-            --pattern 'android-v0.2.2-manifest.json' \
-            --pattern 'android-signing-certificate.txt'
-          cd verify
-          sha256sum -c MichelsLife-Android-v0.2.2-TEST.apk.sha256
-          jq -e '.versionName == "0.2.2" and .versionCode == 4 and .applicationId == "com.michelslab.michelslife" and .windows_public_release == "v3.0.216" and .distribution == "direct-test-apk"' android-v0.2.2-manifest.json
-          actual="$(sha256sum MichelsLife-Android-v0.2.2-TEST.apk | awk '{print $1}')"
-          test "$actual" = "$(jq -r .sha256 android-v0.2.2-manifest.json)"
-          test "$actual" = "a6ae2debe8f55d58e41d35b8b85b26feac1235d27216ac8668fac7cc27d085c8"
-          test -s android-signing-certificate.txt
-          echo "PUBLIC UNIFIED RELEASE VERIFIED: Windows 3.0.216 + Android 0.2.2 code 4, same tag, APK SHA-256 $actual"
+          if [[ "$current_android" == "0.2.3" ]]; then
+            gh release download v3.0.216 --repo michels-lab/michel-s-life-releases --dir verify \
+              --pattern 'MichelsLife-Android-Direct-v0.2.3.apk*' \
+              --pattern 'android-v0.2.3-manifest.json'
+            cd verify
+            sha256sum -c MichelsLife-Android-Direct-v0.2.3.apk.sha256
+            jq -e '
+              .versionName=="0.2.3" and .versionCode==5
+              and .platform=="android" and .package=="com.michelslab.michelslife"
+              and .distribution=="production-signed"
+              and .signerCertSha256=="a01a0540165a00cd228a5fc78adc855bd1c1e6b8195391769c219d76ebd582f2"
+            ' android-v0.2.3-manifest.json
+            test "$(sha256sum MichelsLife-Android-Direct-v0.2.3.apk | awk '{print $1}')" = \
+                 "$(jq -r .sha256 android-v0.2.3-manifest.json)"
+            echo "PASS: real public Windows 3.0.216 + current Android Direct 0.2.3 signed and SHA-verified"
+          else
+            gh release download v3.0.216 --repo michels-lab/michel-s-life-releases --dir verify \
+              --pattern 'MichelsLife-Android-v0.2.2-TEST.apk*' \
+              --pattern 'android-v0.2.2-manifest.json'
+            cd verify
+            sha256sum -c MichelsLife-Android-v0.2.2-TEST.apk.sha256
+            jq -e '.versionName=="0.2.2" and .versionCode==4 and .applicationId=="com.michelslab.michelslife" and .distribution=="direct-test-apk"' android-v0.2.2-manifest.json
+            echo "PASS (TRANSITIONAL ONLY): old TEST-signed 0.2.2 still public; production Direct v0.2.3 NOT YET PUBLISHED"
+          fi

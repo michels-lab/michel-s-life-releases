@@ -1,0 +1,144 @@
+name: Publish unified Michel's Life Windows 3.0.216 and Android Direct 0.2.3
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: michelslife-unified-android-v023
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_REPO: michels-lab/michel-s-life
+      RELEASE_REPO: michels-lab/michel-s-life-releases
+      WINDOWS_TAG: v3.0.216
+      TRANSFER_TAG: michelslife-android-direct-transfer-v0.2.3
+      ANDROID_CERT_PIN: a01a0540165a00cd228a5fc78adc855bd1c1e6b8195391769c219d76ebd582f2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch proven production-signed Android APK and preexisting Windows release
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p signed publish
+          gh release view "$TRANSFER_TAG" --repo "$SOURCE_REPO" --json assets,isPrerelease,isDraft > source-release.json
+          jq -e '.isPrerelease == true and .isDraft == false and (.assets|length)==3' source-release.json
+          gh release download "$TRANSFER_TAG" --repo "$SOURCE_REPO" --dir signed \
+            --pattern 'MichelsLife-Android-Direct-v0.2.3.apk*' \
+            --pattern 'direct-release-manifest.json'
+          (cd signed && sha256sum --check MichelsLife-Android-Direct-v0.2.3.apk.sha256)
+          jq -e --arg pin "$ANDROID_CERT_PIN" '
+            .platform == "android" and .package == "com.michelslab.michelslife"
+            and .versionName == "0.2.3" and .versionCode == 5
+            and .distribution == "production-signed"
+            and .signerCertSha256 == $pin
+            and (.sourceSha | test("^[a-fA-F0-9]{40}$"))
+          ' signed/direct-release-manifest.json
+          test "$(jq -r .sha256 signed/direct-release-manifest.json)" = "$(sha256sum signed/MichelsLife-Android-Direct-v0.2.3.apk | awk '{print $1}')"
+          gh release view "$WINDOWS_TAG" --repo "$RELEASE_REPO" --json assets,name,isDraft,isPrerelease > existing.json
+          jq -e '.isDraft==false and .isPrerelease==false' existing.json
+          for asset in \
+            MichelsLife-Setup-v3.0.216.exe MichelsLife-Setup-v3.0.216.exe.sha256 \
+            MichelsLife-Portable-v3.0.216.exe MichelsLife-Portable-v3.0.216.exe.sha256 \
+            MichelsLife-v3.0.216.exe MichelsLife-v3.0.216.exe.sha256 \
+            AppBundle.zip michels_life_icon.ico; do
+            jq -e --arg name "$asset" 'any(.assets[]; .name == $name)' existing.json >/dev/null \
+              || { echo "::error::Missing real Windows asset $asset on unified release"; exit 1; }
+          done
+          cp signed/MichelsLife-Android-Direct-v0.2.3.apk* publish/
+          cp signed/direct-release-manifest.json publish/android-v0.2.3-manifest.json
+
+      - name: Verify APK identity from actual binary and permanent signing certificate
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDK="$ANDROID_HOME/build-tools/36.0.0"
+          if [[ ! -x "$SDK/apksigner" ]]; then
+            yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+            "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'build-tools;36.0.0'
+          fi
+          "$SDK/apksigner" verify --verbose --print-certs publish/MichelsLife-Android-Direct-v0.2.3.apk \
+            | tee publish/android-signing-certificate-v0.2.3.txt
+          actual="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' publish/android-signing-certificate-v0.2.3.txt | tr -d ':' | tr '[:upper:]' '[:lower:]')"
+          test "$actual" = "$ANDROID_CERT_PIN" \
+            || { echo "::error::Permanent Android Direct signer does not match pinned studio identity"; exit 1; }
+          if grep -qi 'CN=Android Debug' publish/android-signing-certificate-v0.2.3.txt; then
+            echo "::error::Android Debug certificate forbidden for stable customer APK"; exit 1
+          fi
+          "$SDK/aapt" dump badging publish/MichelsLife-Android-Direct-v0.2.3.apk \
+            | grep '^package:' | tee publish/android-package-metadata.txt
+          grep -Eq "name='com.michelslab.michelslife' versionCode='5' versionName='0.2.3'" \
+            publish/android-package-metadata.txt
+          (cd publish && sha256sum --check MichelsLife-Android-Direct-v0.2.3.apk.sha256)
+
+      - name: Replace TEST Android assets on the SAME customer Windows release
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release upload "$WINDOWS_TAG" publish/MichelsLife-Android-Direct-v0.2.3.apk \
+            publish/MichelsLife-Android-Direct-v0.2.3.apk.sha256 \
+            publish/android-v0.2.3-manifest.json \
+            publish/android-signing-certificate-v0.2.3.txt \
+            --repo "$RELEASE_REPO" --clobber
+          for obsolete in \
+            MichelsLife-Android-v0.2.2-TEST.apk MichelsLife-Android-v0.2.2-TEST.apk.sha256 \
+            android-v0.2.2-manifest.json android-signing-certificate.txt; do
+            if gh release view "$WINDOWS_TAG" --repo "$RELEASE_REPO" --json assets \
+              --jq '.assets[].name' | grep -Fxq "$obsolete"; then
+              gh release delete-asset "$WINDOWS_TAG" "$obsolete" --repo "$RELEASE_REPO" --yes
+            fi
+          done
+          cat > notes.md <<'EOF'
+          # Michel's Life — Windows v3.0.216 + Android v0.2.3
+
+          Unified Michel's Lab customer release: **the newest Windows and Android versions are together on this one page**.
+
+          **Windows v3.0.216:** official Setup EXE, optional Portable EXE, updater compatibility alias, checksums and unchanged AppBundle / official icon.
+
+          **Android v0.2.3 (versionCode 5):** current stable **production-signed** Direct APK with permanent Michel's Lab signing identity. Fixes the first-run **Continue** / **Finish** buttons obstructed by Android system navigation, prevents the fixed app bar from intercepting onboarding touches, preserves selected themes and supports independent scrolling with a persistent button footer. APK package metadata, SHA-256 and certificate fingerprint have been independently validated.
+
+          **Important for previously installed TEST APKs:** v0.2.2 was signed by a different, temporary Android Debug certificate. Android cannot upgrade that TEST installation directly to v0.2.3 Direct. First make an independent backup/export of important data or verify cloud sync/restore, then follow a safe clean-install migration. Uninstalling before preserving local data can erase it.
+
+          Android Direct is separate from Google Play. Microsoft Store and Google Play availability are not implied by this GitHub release. Physical Galaxy testing and post-release visual review remain independent evidence.
+          EOF
+          gh release edit "$WINDOWS_TAG" --repo "$RELEASE_REPO" \
+            --title "Michel's Life — Windows v3.0.216 + Android v0.2.3" \
+            --notes-file notes.md
+
+      - name: Verify exact real public Windows and newest Android assets after upload
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release view "$WINDOWS_TAG" --repo "$RELEASE_REPO" \
+            --json assets,name,isDraft,isPrerelease > actual-public.json
+          jq -e '.name | contains("Windows v3.0.216 + Android v0.2.3")' actual-public.json
+          jq -e '.isDraft==false and .isPrerelease==false' actual-public.json
+          for asset in \
+            MichelsLife-Setup-v3.0.216.exe MichelsLife-Setup-v3.0.216.exe.sha256 \
+            MichelsLife-Portable-v3.0.216.exe MichelsLife-Portable-v3.0.216.exe.sha256 \
+            MichelsLife-v3.0.216.exe MichelsLife-v3.0.216.exe.sha256 \
+            AppBundle.zip michels_life_icon.ico \
+            MichelsLife-Android-Direct-v0.2.3.apk \
+            MichelsLife-Android-Direct-v0.2.3.apk.sha256 \
+            android-v0.2.3-manifest.json android-signing-certificate-v0.2.3.txt; do
+            jq -e --arg name "$asset" 'any(.assets[]; .name == $name)' actual-public.json >/dev/null \
+              || { echo "::error::Unified public release missing $asset"; exit 1; }
+          done
+          if jq -r '.assets[].name' actual-public.json | grep -Eq 'Android.*v0[.]2[.]2|android-v0[.]2[.]2'; then
+            echo "::error::Old Android TEST assets were retained on customer release"; exit 1
+          fi
+          mkdir public-check
+          gh release download "$WINDOWS_TAG" --repo "$RELEASE_REPO" --dir public-check \
+            --pattern 'MichelsLife-Android-Direct-v0.2.3.apk*' \
+            --pattern 'android-v0.2.3-manifest.json'
+          (cd public-check && sha256sum --check MichelsLife-Android-Direct-v0.2.3.apk.sha256)
+          test "$(sha256sum public-check/MichelsLife-Android-Direct-v0.2.3.apk | awk '{print $1}')" = \
+               "$(sha256sum signed/MichelsLife-Android-Direct-v0.2.3.apk | awk '{print $1}')"
+          echo "VERIFIED: one real public release, latest Windows v3.0.216 + production-signed Android v0.2.3, complete source-to-public APK integrity"
