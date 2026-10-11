@@ -17,13 +17,13 @@ For EVERY multi-platform Michel's Lab app the public binary release must include
 Michel's Life direct-updater Windows checks this public repository for newer official releases and verifies published checksums before applying direct updates. Google Play and Microsoft Store are separate provider-managed channels.
 
 
-## Historical LouderMe compatibility only
+## Compatibility for old installed LouderMe clients (not releases)
 
-LouderMe has moved to its independent official public channel: **https://github.com/michels-lab/LouderME-Releases**. New releases of LouderMe must never be published here.
+**No LouderMe releases or installers are published in this repository.** All LouderMe release history and new Android/Windows unified releases belong exclusively to [LouderME-Releases](https://github.com/michels-lab/LouderME-Releases/releases).
 
-Previously distributed LouderMe versions embedded these two legacy updater manifest URLs: `louderme/latest.json` and `louderme-desktop/latest.json`. Those files now point to the *verified independent LouderMe release*, retaining in-place upgrade compatibility for installed clients. They are not additional LouderMe publication channels.
+On 2026-10-11, after verifying all **13** original LouderMe release copies in the product-only repository against their original binary sizes and SHA-256 digests, the 13 LouderMe releases and old release tags were deleted from this Michel's Life repository. The old manually pinned `/releases/download/louderme-*/...` URLs no longer work; use the LouderMe-only release URLs instead.
 
-Historical LouderMe tags and their pinned binary download URLs are retained temporarily to avoid breaking external legacy links. All three old LouderMe publisher workflows have been retired. Historical entries are not evidence of active mixed publishing.
+Only two legacy, **non-release** update manifests remain (`louderme/latest.json`, `louderme-desktop/latest.json`). Existing installed LouderMe versions contain hardcoded URLs to those manifest paths, so they are kept strictly as redirects-through-metadata to the new LouderMe-only binary downloads. They do not contain installers and cannot create LouderMe releases here. Once older clients no longer need these two files, they can be retired.
 
 ## Security
 
