@@ -131,7 +131,7 @@ jobs:
             jq -e --arg name "$asset" 'any(.assets[]; .name == $name)' actual-public.json >/dev/null \
               || { echo "::error::Unified public release missing $asset"; exit 1; }
           done
-          if jq -r '.assets[].name' actual-public.json | grep -Eq 'Android.*0\\.2\\.2|android-v0\\.2\\.2'; then
+          if jq -r '.assets[].name' actual-public.json | grep -Eq 'Android.*v0[.]2[.]2|android-v0[.]2[.]2'; then
             echo "::error::Old Android TEST assets were retained on customer release"; exit 1
           fi
           mkdir public-check
