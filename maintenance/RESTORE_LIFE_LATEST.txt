@@ -1,2 +1,0 @@
-2026-10-11
-Set Michel's Life v3.0.216 as latest after LouderMe release-channel isolation.
