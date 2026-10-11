@@ -2,6 +2,10 @@ name: Publish unified Michel's Life Windows 3.0.216 and Android Direct 0.2.3
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.michelslab/release-intents/life-android-v023.txt'
 
 permissions:
   contents: write
