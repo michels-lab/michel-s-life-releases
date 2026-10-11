@@ -1,1 +1,0 @@
-2026-10-11: Delete the thirteen fully mirrored LouderMe GitHub releases/tags from Michel's Life; preserve required legacy update feed aliases and Michel's Life releases. Owner explicitly requested total removal of LouderMe releases from this repository.
