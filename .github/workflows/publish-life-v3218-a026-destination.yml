@@ -31,6 +31,8 @@ jobs:
       ANDROID_CERT_PIN: 36a9f5144243d14ebade9d38559cfd7d4d9207c1edba01e6f0fbdd5f076a50fa
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - name: Require isolated destination owner-authorized release intent
         shell: bash
         run: |
