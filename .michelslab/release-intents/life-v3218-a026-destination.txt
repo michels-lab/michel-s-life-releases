@@ -1,0 +1,9 @@
+Michel's Life — owner-authorized FIRST PUBLIC release to the official releases repository (2026-10-12).
+Windows v3.0.218: Setup, Portable and updater-compatible alias; Android Direct v0.2.6, versionCode 8, permanent pinned signing certificate.
+Explicit owner instruction: publish now; no external app users have been onboarded.
+Release exact-source commit: 58ae3aa43ae08037794cf88783e933fabd3e2066
+Release source GitHub Actions run: 38296739118
+Passed exact-source-gate, installed Windows Setup and portable launch, permanent signer and checksum checks, signed Android bundle, same-run Android 16 candidate install/launch, Source validation, Android UI smoke and UI smoke. Source-side publisher was blocked by GH_TOKEN 403 across repositories, not invalid binary; publish with destination repository's own GITHUB_TOKEN contents:write.
+Use only the validated artifacts from that run and perform destination-side version, source, signer, SHA256, 13-asset draft, downloaded checksums and release/latest verification. Publish tag v3.0.218 only after successful checks.
+Keep issue #28 Supabase same-account, issue #53 locked-screen alarms, issue #54 Galaxy physical visual validation and issue #104 onboarding state review documented as remaining follow-ups. No claim these have been physically validated.
+Do not overwrite v3.0.217 artifacts. If any stage fails, leave the candidate unpublished.
