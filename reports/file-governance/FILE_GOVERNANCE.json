@@ -21,7 +21,7 @@
     "UNKNOWN_PURPOSE": 4
   },
   "finding_total": 4,
-  "inventory_fingerprint": "83855502ca4c988f75d2037957eef1c04d68e9442e92dff114c66709dbb0e471",
+  "inventory_fingerprint": "420af632a10273a4f750c8abb86a5bcfd173b648d77937cfff26d876f9ddd9fd",
   "evidence_fingerprint": "ac1597ae7c35a1e063bbd48f5c067bc4cfff523db086215086c3c1b0c93c5be3",
   "files": [
     {
@@ -29,7 +29,7 @@
       "role": "workflow",
       "purpose": "GitHub Actions automation",
       "certainty": "rule",
-      "blob": "ab85888501eb50eb6e436b8fbe7085bf7bc7184f"
+      "blob": "9e1d792c040f627929997a465b412f045b67aeb1"
     },
     {
       "path": ".github/workflows/file-steward-pr-validation.yml",
