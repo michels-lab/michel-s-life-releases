@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "audit_kind": "deterministic_full_tracked_tree",
-  "tracked_files_total": 29,
-  "classified_files_total": 25,
+  "tracked_files_total": 30,
+  "classified_files_total": 26,
   "docs_content_inspected": 5,
   "large_docs_skipped": 0,
   "excluded_reports": 4,
@@ -15,13 +15,13 @@
     "source": 1,
     "test": 1,
     "unknown": 4,
-    "workflow": 6
+    "workflow": 7
   },
   "finding_counts": {
     "UNKNOWN_PURPOSE": 4
   },
   "finding_total": 4,
-  "inventory_fingerprint": "7003a485436e5702c608e5d2ad59bbc07d83a89d9cc4a6408420c58dc204ad82",
+  "inventory_fingerprint": "25445784f2246802795cc6a35b6abe75007be905ea412948a0588b53aea322af",
   "evidence_fingerprint": "ac1597ae7c35a1e063bbd48f5c067bc4cfff523db086215086c3c1b0c93c5be3",
   "files": [
     {
@@ -30,6 +30,13 @@
       "purpose": "GitHub Actions automation",
       "certainty": "rule",
       "blob": "f0b1152be810141926759002e1fd17ee409aab1e"
+    },
+    {
+      "path": ".github/workflows/file-steward-pr-validation.yml",
+      "role": "workflow",
+      "purpose": "GitHub Actions automation",
+      "certainty": "rule",
+      "blob": "5163f5e1348f32b455d7791aea6b4a5d649a9f31"
     },
     {
       "path": ".github/workflows/publish-life-unified-android-v023.yml",
@@ -78,7 +85,7 @@
       "role": "agent",
       "purpose": "assistant role/instructions",
       "certainty": "rule",
-      "blob": "b1d01e48c04023ad108846e6f554987ed2fd56aa"
+      "blob": "b6eaec3b92e4637203ddeb61fdb7c530be158ff2"
     },
     {
       "path": ".michelslab/file-audit-policy.json",
@@ -190,14 +197,14 @@
       "role": "source",
       "purpose": "code/test implementation",
       "certainty": "rule",
-      "blob": "5233e1e0466ce9bf333e24177d66e21b7d8fef84"
+      "blob": "0e79542fa340086eaee2f04b93516a73aa61f7ce"
     },
     {
       "path": "tools/test_repository_file_auditor.py",
       "role": "test",
       "purpose": "code/test implementation",
       "certainty": "rule",
-      "blob": "de43a587db0cf63a8dbe1045e00a81704b4a0d75"
+      "blob": "97240782f13b3fe1d6a7768c171d750be9923443"
     }
   ],
   "findings": [
