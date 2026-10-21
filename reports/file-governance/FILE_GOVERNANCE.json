@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "audit_kind": "deterministic_full_tracked_tree",
-  "tracked_files_total": 25,
+  "tracked_files_total": 29,
   "classified_files_total": 25,
   "docs_content_inspected": 5,
   "large_docs_skipped": 0,
-  "excluded_reports": 0,
+  "excluded_reports": 4,
   "roles": {
     "agent": 2,
     "bitacora": 2,
@@ -21,7 +21,7 @@
     "UNKNOWN_PURPOSE": 4
   },
   "finding_total": 4,
-  "inventory_fingerprint": "22eb89fe764b17dd8190621188df4edd031657ffcc73fe1023989ab999b0f5c4",
+  "inventory_fingerprint": "aa4eccbe2c9d8ad78e2d4b44d48514591c8c537f59550c21b83f665ef2d0f7f1",
   "evidence_fingerprint": "ac1597ae7c35a1e063bbd48f5c067bc4cfff523db086215086c3c1b0c93c5be3",
   "files": [
     {
@@ -190,14 +190,14 @@
       "role": "source",
       "purpose": "code/test implementation",
       "certainty": "rule",
-      "blob": "fe0546a76c0cf308c99f0cc4f1c11aa0677496ec"
+      "blob": "3f704fa24a27aa107914d85b772b32227ffd82fa"
     },
     {
       "path": "tools/test_repository_file_auditor.py",
       "role": "test",
       "purpose": "code/test implementation",
       "certainty": "rule",
-      "blob": "b94da69cd18c8066756acba162bc66618261b522"
+      "blob": "ebac5d9cfe86ff3c1e94b96468027a6578d1d708"
     }
   ],
   "findings": [
