@@ -5,7 +5,7 @@ No file is auto-deleted or declared unused.
 
 ## Coverage
 
-Tracked: 30; classified: 26; readable documents: 5; above read cap: 0; findings: 4.
+Tracked: 31; classified: 27; readable documents: 6; above read cap: 0; findings: 4.
 
 ## File roles
 
@@ -14,7 +14,7 @@ Tracked: 30; classified: 26; readable documents: 5; above read cap: 0; findings:
 | agent | 2 |
 | bitacora | 2 |
 | config | 6 |
-| document | 2 |
+| document | 3 |
 | index | 1 |
 | source | 1 |
 | test | 1 |

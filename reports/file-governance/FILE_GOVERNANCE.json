@@ -1,16 +1,16 @@
 {
   "schema_version": 1,
   "audit_kind": "deterministic_full_tracked_tree",
-  "tracked_files_total": 30,
-  "classified_files_total": 26,
-  "docs_content_inspected": 5,
+  "tracked_files_total": 31,
+  "classified_files_total": 27,
+  "docs_content_inspected": 6,
   "large_docs_skipped": 0,
   "excluded_reports": 4,
   "roles": {
     "agent": 2,
     "bitacora": 2,
     "config": 6,
-    "document": 2,
+    "document": 3,
     "index": 1,
     "source": 1,
     "test": 1,
@@ -21,7 +21,7 @@
     "UNKNOWN_PURPOSE": 4
   },
   "finding_total": 4,
-  "inventory_fingerprint": "420af632a10273a4f750c8abb86a5bcfd173b648d77937cfff26d876f9ddd9fd",
+  "inventory_fingerprint": "c0667a15b6fd3dc9a11758414133b52189ca58fbee36759516c543489fa2acfa",
   "evidence_fingerprint": "ac1597ae7c35a1e063bbd48f5c067bc4cfff523db086215086c3c1b0c93c5be3",
   "files": [
     {
@@ -155,7 +155,7 @@
       "role": "index",
       "purpose": "navigation/onboarding",
       "certainty": "rule",
-      "blob": "0dcc11c1cb6fb62905ab5a1431eccedadbdbbf0a"
+      "blob": "136236f82318e749ea4ef821a7d39c60cd48507a"
     },
     {
       "path": "RELEASE_AUDIT_LOG.md",
@@ -163,6 +163,13 @@
       "purpose": "technical/audit change history",
       "certainty": "rule",
       "blob": "e9dc04b5a108e407d85f3594299e148418dae604"
+    },
+    {
+      "path": "docs/GRANADA_DISTRIBUTION_PLUGIN_AUDIT_2026-10-21.md",
+      "role": "document",
+      "purpose": "manual/decision/report/historical note",
+      "certainty": "inferred",
+      "blob": "613dbc4d526d6f66e150b5c8c367d204de94dd7c"
     },
     {
       "path": "louderme-desktop/latest.json",
