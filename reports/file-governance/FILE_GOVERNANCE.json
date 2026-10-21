@@ -21,7 +21,7 @@
     "UNKNOWN_PURPOSE": 4
   },
   "finding_total": 4,
-  "inventory_fingerprint": "aa4eccbe2c9d8ad78e2d4b44d48514591c8c537f59550c21b83f665ef2d0f7f1",
+  "inventory_fingerprint": "7003a485436e5702c608e5d2ad59bbc07d83a89d9cc4a6408420c58dc204ad82",
   "evidence_fingerprint": "ac1597ae7c35a1e063bbd48f5c067bc4cfff523db086215086c3c1b0c93c5be3",
   "files": [
     {
@@ -190,14 +190,14 @@
       "role": "source",
       "purpose": "code/test implementation",
       "certainty": "rule",
-      "blob": "3f704fa24a27aa107914d85b772b32227ffd82fa"
+      "blob": "5233e1e0466ce9bf333e24177d66e21b7d8fef84"
     },
     {
       "path": "tools/test_repository_file_auditor.py",
       "role": "test",
       "purpose": "code/test implementation",
       "certainty": "rule",
-      "blob": "ebac5d9cfe86ff3c1e94b96468027a6578d1d708"
+      "blob": "de43a587db0cf63a8dbe1045e00a81704b4a0d75"
     }
   ],
   "findings": [
