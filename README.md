@@ -4,14 +4,16 @@ This public repository is the official customer-facing binary/update channel exc
 
 ## Michel's Life — unified Windows + Android release
 
-**Current verified release:** https://github.com/michels-lab/michel-s-life-releases/releases/tag/v3.0.217
+[Operación Granada — auditoría del repo de distribución y plugins](docs/GRANADA_DISTRIBUTION_PLUGIN_AUDIT_2026-10-21.md).
 
-- **Windows v3.0.217:** recommended `MichelsLife-Setup-v3.0.217.exe`, optional `MichelsLife-Portable-v3.0.217.exe`, and byte-identical `MichelsLife-v3.0.217.exe` compatibility alias; individual SHA-256 companion files.
-- **Android Direct v0.2.5 (versionCode 7):** `MichelsLife-Android-Direct-v0.2.5.apk` using the existing permanent signing certificate. Adds the full touch-oriented Missions editor with weekly recurrence and sticky Save/Cancel while preserving the shared canonical mission data.
-- `AppBundle.zip`, official icon, Android signing certificate, manifest and `release-provenance.json` accompany these actual binaries.
-- **Validation:** exact-source CI, Windows Setup install + executable launch, Android Direct signer/package/hash checks, native Android 16 install/relaunch with screenshots, and destination-owned draft verification completed successfully. [Publishing evidence](https://github.com/michels-lab/michel-s-life-releases/actions/runs/38176304417).
+**Latest GitHub-published unified release (API verified 2026-10-21):** [v3.0.221](https://github.com/michels-lab/michel-s-life-releases/releases/tag/v3.0.221), published 2026-10-19.
 
-**Android upgrade precautions:** Old v0.2.2 TEST APKs used a different debug certificate and cannot update in place. Export or back up data before switching from the TEST build. Direct v0.2.5 uses the same permanent Direct signer as v0.2.4 and increases versionCode from 6 to 7. Normal installation over an existing compatible Direct installation should be possible, but actual Samsung Galaxy data-retention testing is still pending. Store publication and real Windows↔Galaxy Supabase/Google sync are separate and not implied.
+- **Windows v3.0.221:** Setup, Portable and compatibility alias with SHA-256 sidecars.
+- **Android Direct v0.2.9:** signed-channel APK, SHA-256 sidecar and signing-certificate description; version is separate from the Windows version.
+- The release also contains `AppBundle.zip`, official icon, Android manifest and source `release-provenance.json`; GitHub release inventory returned **13 assets**.
+- **Scope of verification:** asset metadata/tag via GitHub API, not local executable, native reinstall, source-SHA reproducibility, live Samsung data persistence or two-device synchronization. [App source/CI audit](https://github.com/michels-lab/michel-s-life/blob/main/docs/GRANADA_APP_PLUGIN_AUDIT_2026-10-21.md).
+
+**Android upgrade precautions:** the earlier v0.2.2 TEST APK had a different debug certificate; a direct upgrade across signing identities is unsupported. Back up existing data before reinstalling. Device-specific retention and same-account synchronization remain separate acceptance tests.
 
 Every Michel's Lab product must publish one unified public release per app with all currently distributed platforms. Michel's Life Desktop's direct updater consults this public repository and checks release hashes. Keep LouderMe releases exclusively in [LouderME-Releases](https://github.com/michels-lab/LouderME-Releases/releases).
 
