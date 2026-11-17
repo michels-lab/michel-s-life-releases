@@ -1,0 +1,35 @@
+Michel's Life — explicit owner-authorized stable release 2026-11-17.
+
+The owner explicitly requested Operación Granada and the release in this
+continuous Michel's Life workflow. Publish Windows 3.0.226 and Android Direct
+0.2.15 / versionCode 17 as one final STABLE, no RC or Developer Edition.
+
+Verified source repository: michels-lab/michel-s-life
+Exact source intent commit: 071ae2e90c9f8c8def0801c1b80d762e9576e4e2
+Source merged version commit: 1edb857982edad811a5b6d1fd6566952519e2817
+Exact source workflow: 44199216709
+All independent source jobs SUCCESS:
+- exact-source (Source validation, Windows UI smoke, Android UI smoke and updater
+  checks at exact source intent commit)
+- windows / build (Setup and Portable launch-tested)
+- android / android (permanent production Direct signing; 0.2.15/code17)
+- signed-native-android15 (signed candidate installed and relaunched with
+  actual PNG device screenshots)
+Only source publish-unified failed after that due to expired cross-repository
+RELEASES_REPO_TOKEN: HTTP 401 Bad credentials. No public 3.0.226 tag exists.
+
+Destination-owned publisher from PR #19 merged commit 20a4ebd6b3ddb6f1d877eb810c3139f548c6faac:
+.github/workflows/publish-life-v3226-a0215-destination.yml
+The publisher is allowed to use the destination repository's GITHUB_TOKEN,
+download SAME source-run artifacts, require the exact SHA, verification jobs,
+permanent Android signer, aapt code17, checksums and executable checks,
+create draft with 13 assets, download/verify assets, then publish
+v3.0.226-android-v0.2.15 as latest stable. NEVER overwrite 3.0.225.
+Failure of any gate must leave release unpublished.
+
+Features: opt-out Windows startup, Quick Alarms +5/+10/+15/+30/+60/+120,
+previewable selectable tones and privately installed user MP3/WAV/OGG up to
+6MB per current custom selection, readable Pomodoro clock and controls,
+motivation accordion and removal of dead legacy sidebar button.
+Physical Galaxy testing of exact-alarm access/Doze/custom ringtone,
+intermittent Story JS issue #168 and real data upgrade remain open owner QA.
