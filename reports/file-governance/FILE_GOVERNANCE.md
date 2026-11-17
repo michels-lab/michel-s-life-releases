@@ -5,7 +5,7 @@ No file is auto-deleted or declared unused.
 
 ## Coverage
 
-Tracked: 32; classified: 28; readable documents: 6; above read cap: 0; findings: 4.
+Tracked: 33; classified: 29; readable documents: 6; above read cap: 0; findings: 5.
 
 ## File roles
 
@@ -18,7 +18,7 @@ Tracked: 32; classified: 28; readable documents: 6; above read cap: 0; findings:
 | index | 1 |
 | source | 1 |
 | test | 1 |
-| unknown | 4 |
+| unknown | 5 |
 | workflow | 8 |
 
 ## Findings (human review required)
@@ -27,6 +27,7 @@ Tracked: 32; classified: 28; readable documents: 6; above read cap: 0; findings:
 - **REVIEW / UNKNOWN_PURPOSE** .michelslab/release-intents/life-android-v024.txt: No reliable purpose category from path. Next: Declare role after reviewing usage (ID 37a0c79c2c67674a)
 - **REVIEW / UNKNOWN_PURPOSE** .michelslab/release-intents/life-v3217-a025-destination.txt: No reliable purpose category from path. Next: Declare role after reviewing usage (ID d9556fb8adaceda2)
 - **REVIEW / UNKNOWN_PURPOSE** .michelslab/release-intents/life-v3218-a026-destination.txt: No reliable purpose category from path. Next: Declare role after reviewing usage (ID 457ebcc6f7a23ede)
+- **REVIEW / UNKNOWN_PURPOSE** .michelslab/release-intents/life-v3225-a0214-destination.txt: No reliable purpose category from path. Next: Declare role after reviewing usage (ID 43a335280c3387b9)
 
 Complete path → purpose/role/certainty list lives in FILE_GOVERNANCE.json. SUMMARY.json has counts only for master polling.
 A dated file, duplicate, or suspicious name is an **investigation candidate**, not unwanted material.
