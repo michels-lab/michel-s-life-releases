@@ -1,0 +1,24 @@
+Michel's Life — official destination-owned stable-release authorization, 2026-11-17.
+
+Owner explicitly requested: "op granada y release".
+Destination workflow: .github/workflows/publish-life-v3225-a0214-destination.yml
+Destination tag: v3.0.225-android-v0.2.14
+Source repo: michels-lab/michel-s-life
+Exact source run: 44174550177
+Exact source SHA: fd6f9aa6d8c125886a620b7fb79669689920cc49
+Source version PR: #213, e2a8cc93ffe56e4d1f932157257b60b936199088
+Destination publisher PR: #18, 2a9fa865985dc198d09e265a7edd2bb0503e7fcc
+
+Source run validated the following independent jobs:
+- exact-source: SUCCESS (Source, Windows UI, Android UI, Direct updater exact SHA)
+- windows / build: SUCCESS (Windows Setup/Portable compiled and launch-tested)
+- android / android: SUCCESS (signed Direct 0.2.14, permanent certificate, sha manifest)
+- signed-native-android15: SUCCESS (signed APK installed and relaunched on AVD with real screenshots)
+The source publish-unified alone failed on release creation with HTTP 401 from
+the outdated cross-repository RELEASES_REPO_TOKEN. Source artifacts are intact.
+
+Single-file intent commit: do not combine with publisher code. Download exact
+same-run artifacts, verify SHA-256, production signature, Android versionCode
+16, Windows installed/portable launch, source provenance and 13 public assets.
+Publish only after draft and asset re-download verification. Never overwrite
+previous tags or publish RC/Developer Edition. Keep issue #168 open.
