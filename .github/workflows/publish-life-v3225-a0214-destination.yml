@@ -24,7 +24,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       DESTINATION: michels-lab/michel-s-life-releases
-      TAG: v3.0.225
+      TAG: v3.0.225-android-v0.2.14
       SOURCE: michels-lab/michel-s-life
       SOURCE_RUN: '44174550177'
       SOURCE_SHA: 'fd6f9aa6d8c125886a620b7fb79669689920cc49'
