@@ -21,7 +21,7 @@
     "UNKNOWN_PURPOSE": 7
   },
   "finding_total": 7,
-  "inventory_fingerprint": "4f489ab33b5917dcb4fd302fed1449f2ec88f96297c1ec6860b1497713b02e8a",
+  "inventory_fingerprint": "2a158d209fa3f26a983fba5f6d0fa521d9cd546a430c490204bac56c6d3cc5f0",
   "evidence_fingerprint": "1e6f7e382c45c656bd7316246cebd3940aa098e99a55e52a63c8a9a6e2c5645d",
   "files": [
     {
@@ -197,7 +197,7 @@
       "role": "index",
       "purpose": "navigation/onboarding",
       "certainty": "rule",
-      "blob": "d93cdef8c25abf9705c8bd35425d2e11b86e995a"
+      "blob": "a1944f96ad5f466fd20647aed9d1215329414d00"
     },
     {
       "path": "RELEASE_AUDIT_LOG.md",
