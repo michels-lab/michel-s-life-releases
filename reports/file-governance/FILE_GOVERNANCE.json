@@ -21,7 +21,7 @@
     "UNKNOWN_PURPOSE": 8
   },
   "finding_total": 8,
-  "inventory_fingerprint": "4edf030ed48b6a48ca10f31fda192bfb0f86e23dcec33e713d9756cca5dcae47",
+  "inventory_fingerprint": "efb9d08cb74c0c4bdc4ec8a85588fc8153ba5cb3e65ec2ad32e4f246d7e326df",
   "evidence_fingerprint": "7a6243f0d04f5524a855eaeb1c8ce08c36386905d3baa75ff2af366ef7fb08a2",
   "files": [
     {
@@ -218,7 +218,7 @@
       "role": "bitacora",
       "purpose": "technical/audit change history",
       "certainty": "rule",
-      "blob": "e9dc04b5a108e407d85f3594299e148418dae604"
+      "blob": "9b2639cb1934218f6f01fdceab7ecd92116ec8b9"
     },
     {
       "path": "docs/GRANADA_DISTRIBUTION_PLUGIN_AUDIT_2026-10-21.md",
