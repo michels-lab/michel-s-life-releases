@@ -1,0 +1,12 @@
+{
+  "schema": "michelslab.destination-owned-unified-publish-intent.v1",
+  "source_run": 44466658753,
+  "source_sha": "0a9b6e966c25d9400a0e7db15c5f8aec1acb995a",
+  "source_conclusion": "success",
+  "signed_native_android15": "passed",
+  "windows_version": "3.0.228",
+  "android_direct_version": "0.2.17",
+  "android_version_code": 19,
+  "stable_only": true,
+  "publication": "require exact-source, signed native screenshots, signer pin, checksums and 13 separate assets; do not overwrite prior release"
+}
