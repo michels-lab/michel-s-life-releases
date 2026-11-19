@@ -1,0 +1,22 @@
+{
+  "schema": "michelslab.destination-owned-unified-publish-intent.v1",
+  "source_run": 44476655063,
+  "source_sha": "ac17aefe8b5357f36ae941920774dd652c9f4050",
+  "source_conclusion": "success",
+  "release": "Michel's Life cinematic original alarms",
+  "windows_version": "3.0.229",
+  "android_direct_version": "0.2.18",
+  "android_version_code": 20,
+  "signed_native_android15": "passed",
+  "exact_sha_required_checks": [
+    "Source validation",
+    "UI smoke",
+    "Android UI smoke",
+    "GRANADA Android Direct safe update discovery",
+    "GRANADA Quick Mission and original Pomodoro audio",
+    "GRANADA cross-platform immersive Focus",
+    "GRANADA personal alarms — Windows and Android contracts"
+  ],
+  "stable_only": true,
+  "publication": "verify source SHA, signed Android certificate, 13 separate assets and checksums; never overwrite prior release"
+}
