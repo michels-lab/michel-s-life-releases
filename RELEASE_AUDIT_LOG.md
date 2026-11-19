@@ -1,5 +1,15 @@
 # Michel's Life — Release Channel Audit Log
 
+## 2026-11-19 — Verified stable Windows 3.0.229 + Android Direct 0.2.18 (cinematic alarms)
+
+**Current latest public release:** [v3.0.229-android-v0.2.18](https://github.com/michels-lab/michel-s-life-releases/releases/tag/v3.0.229-android-v0.2.18), published 2026-11-19 07:18:56 UTC, `draft=false`, `prerelease=false`, 13 public assets. Prior 3.0.228/0.2.17 tag remains untouched.
+
+**Source provenance:** exact source release-intent SHA `ac17aefe8b5357f36ae941920774dd652c9f4050`, source pipeline [#44476655063](https://github.com/michels-lab/michel-s-life/actions/runs/44476655063) **SUCCESS**; 7/7 mandatory UI, alarms, audio, source, Focus and Android updater checks GREEN. Windows Setup and Portable actually launched in native Windows CI; Android Direct v0.2.18 / code20 signed using pinned permanent certificate, manifest SHA-256 and same-source evidence, installed/onboarded/relaunched on Android15 AVD. Production signer pinned and checksum validated; separate dest intent `a715b3c34b47c0c5db5b984aa3a2baf3d3fae98a`; publisher [#44478564052](https://github.com/michels-lab/michel-s-life-releases/actions/runs/44478564052) **SUCCESS**, validated 13 distinct assets and published atomically.
+
+**Included sound-design fixes:** six composed 24s original stereo alarm themes with evolving chords, bells, warm layers, echo and distinct pacing (source PR #221); Android v3 WAV cache and separate audible-fallback/silent-when-immersive notification channels; Windows no longer adds `SystemSounds.Exclamation` over an already-playing theme (PR #223). Original presets, custom audio and alarm scheduling retained; no third-party music samples.
+
+**Limits:** Android emulator and source smoke are not physical-phone tests. Doze, locked device native sound choice, speaker aesthetic, in-place upgrade/persistence, OAuth/Supabase and intermittent source issue #168 remain unverified. No Play Store, Microsoft Store, RC or Developer Edition published. This log records a release already confirmed through GitHub API; it does not create or rewrite distribution assets.
+
 ## 2026-11-18 Mexico / 2026-11-19 UTC — Windows 3.0.228 + Android Direct 0.2.17: published and verified
 
 **Current unified stable tag:** [v3.0.228-android-v0.2.17](https://github.com/michels-lab/michel-s-life-releases/releases/tag/v3.0.228-android-v0.2.17), published 2026-11-19 05:50:18 UTC, `draft=false`, `prerelease=false`, 13 public assets.
