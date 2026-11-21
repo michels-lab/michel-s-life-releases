@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "audit_kind": "deterministic_full_tracked_tree",
-  "tracked_files_total": 41,
-  "classified_files_total": 37,
+  "tracked_files_total": 44,
+  "classified_files_total": 40,
   "docs_content_inspected": 6,
   "large_docs_skipped": 0,
   "excluded_reports": 4,
@@ -13,15 +13,15 @@
     "document": 3,
     "index": 1,
     "source": 1,
-    "test": 1,
+    "test": 2,
     "unknown": 9,
-    "workflow": 12
+    "workflow": 14
   },
   "finding_counts": {
     "UNKNOWN_PURPOSE": 9
   },
   "finding_total": 9,
-  "inventory_fingerprint": "5bc099357c8f62af14ae6581fe90a1f1324f44ccc72924df301a7a6d7c7578ff",
+  "inventory_fingerprint": "70143262f0b8a9e48e2c02f25c5ee1ca80c3f5be5abfffaef8bc9352e85dc34e",
   "evidence_fingerprint": "b9217c83c0cba3a5ac8a0f5559ff7c96ac22154eb71f4599c9aa231c881c8061",
   "files": [
     {
@@ -37,6 +37,13 @@
       "purpose": "GitHub Actions automation",
       "certainty": "rule",
       "blob": "5163f5e1348f32b455d7791aea6b4a5d649a9f31"
+    },
+    {
+      "path": ".github/workflows/granada-life-destination-v3230-preflight.yml",
+      "role": "workflow",
+      "purpose": "GitHub Actions automation",
+      "certainty": "rule",
+      "blob": "d7bd67c727e21e2a3be58762726897c1cc620902"
     },
     {
       "path": ".github/workflows/publish-life-unified-android-v023.yml",
@@ -100,6 +107,13 @@
       "purpose": "GitHub Actions automation",
       "certainty": "rule",
       "blob": "e03c87a4ebfcbe4f8ab69be194c30699d434fb90"
+    },
+    {
+      "path": ".github/workflows/publish-life-v3230-a0219-destination.yml",
+      "role": "workflow",
+      "purpose": "GitHub Actions automation",
+      "certainty": "rule",
+      "blob": "bf02022cc9f64d1c572fdce20333345d6a2cd8d6"
     },
     {
       "path": ".github/workflows/verify-life-unified-release.yml",
@@ -275,6 +289,13 @@
       "purpose": "code/test implementation",
       "certainty": "rule",
       "blob": "0e79542fa340086eaee2f04b93516a73aa61f7ce"
+    },
+    {
+      "path": "tools/test_publisher_v3230.py",
+      "role": "test",
+      "purpose": "code/test implementation",
+      "certainty": "rule",
+      "blob": "52ff3735973af6f0a8591fad60c21f1c8c529bd7"
     },
     {
       "path": "tools/test_repository_file_auditor.py",
