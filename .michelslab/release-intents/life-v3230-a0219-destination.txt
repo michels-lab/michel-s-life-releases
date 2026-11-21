@@ -1,0 +1,24 @@
+{
+  "schema": "michelslab.destination-owned-unified-publish-intent.v1",
+  "source_run": 44842053581,
+  "source_sha": "9e3a3abc84c811fc2baf4eb64e5a50ca1ccc31cf",
+  "source_conclusion": "success",
+  "release": "Michel's Life Settings color preview and classical Focus music",
+  "windows_version": "3.0.230",
+  "android_direct_version": "0.2.19",
+  "android_version_code": 21,
+  "signed_native_android15": "passed",
+  "exact_sha_required_checks": [
+    "Source validation",
+    "UI smoke",
+    "Android UI smoke",
+    "GRANADA Android Direct safe update discovery",
+    "GRANADA Quick Mission and original Pomodoro audio",
+    "GRANADA cross-platform immersive Focus",
+    "GRANADA personal alarms — Windows and Android contracts",
+    "GRANADA Settings live color persistence",
+    "GRANADA classical Focus excerpts"
+  ],
+  "stable_only": true,
+  "publication": "verify source SHA, nine checks and signed Android15 source job, permanent Android signer, 13 assets and checksums before atomically publishing stable release; never overwrite existing release"
+}
