@@ -1,5 +1,19 @@
 # Michel's Life — Release Channel Audit Log
 
+## 2026-11-20 México / 2026-11-21 UTC — Verified stable Windows 3.0.230 + Android Direct 0.2.19 (Settings + classical Focus)
+
+**Current latest public release:** [v3.0.230-android-v0.2.19](https://github.com/michels-lab/michel-s-life-releases/releases/tag/v3.0.230-android-v0.2.19) publicado **2026-11-21 00:31:09 UTC**, `draft=false`, `prerelease=false`, 13 assets. Release anterior 3.0.229/0.2.18 preservada sin sobrescribir.
+
+**Fuente exacta y build:** `9e3a3abc84c811fc2baf4eb64e5a50ca1ccc31cf`; [source run #44842053581](https://github.com/michels-lab/michel-s-life/actions/runs/44842053581) **SUCCESS**, 9/9 gates de Source, Windows UI, Android UI, Direct updater, Quick Mission, Focus inmersivo, Personal Alarms, Settings color persistence y clásica SUCCESS sobre ese SHA; `exact-source`, `windows / build`, `android / android` y `signed-native-android15` SUCCESS. Windows Setup y Portable iniciados en CI; Android APK de producción Direct 0.2.19/code21 firmado usando certificado permanente y **realmente instalada/onboarded/reabierta** en Android15 emulado. Los tres artefactos fuente (Windows, Android Direct, test) y evidencia nativa están en #44842053581. No son pruebas de dispositivo físico.
+
+**Publicador destino:** intent aislado commit `49f5a5ee61100d88dfb0a3c9e045ee1fc5173ea8`; [publisher #44844286557](https://github.com/michels-lab/michel-s-life-releases/actions/runs/44844286557) **SUCCESS**. Descargó Windows y APK producción del **mismo source run**, inspeccionó certificados Android, `versionCode21`, manifiesto y SHA, validó hashes de los tres ejecutables Windows e iniciación, construyó 13 assets, publicó primero un draft, verificó descargas/checksums/provenance y convirtió a `latest` solo después de satisfacer la inspección.
+
+**Incluye:** PR [#225](https://github.com/michels-lab/michel-s-life/pull/225) Settings floating color preview y almacenamiento persistente empaquetado (Windows+WebView Android); PR [#226](https://github.com/michels-lab/michel-s-life/pull/226) miniaturas de motivos clásicos públicos Mozart K545 y Chaikovski Op39/1 sintetizadas en Web Audio, ocho ambientes previos preservados; #227 versionado exacto. Sin grabaciones comerciales o obras completas, RC ni Developer Edition.
+
+**Limitaciones honestas:** el File Steward audit independiente source falló por conflicto `git push` de reporte mientras otro escritor actualizó main (no es uno de los nueve checks de release). Algunos emuladores Android14/16 debug de PR previos perdieron ADB/QEMU y no se declaran aprobados. No certificada prueba física Samsung bajo bloqueo/Doze, MP3 personal, upgrade in-place sin pérdida, cuentas reales Google/Supabase, error JS [#168](https://github.com/michels-lab/michel-s-life/issues/168) reparado o Microsoft/Google Store.
+
+
+
 ## 2026-11-19 — Verified stable Windows 3.0.229 + Android Direct 0.2.18 (cinematic alarms)
 
 **Current latest public release:** [v3.0.229-android-v0.2.18](https://github.com/michels-lab/michel-s-life-releases/releases/tag/v3.0.229-android-v0.2.18), published 2026-11-19 07:18:56 UTC, `draft=false`, `prerelease=false`, 13 public assets. Prior 3.0.228/0.2.17 tag remains untouched.
