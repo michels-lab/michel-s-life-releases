@@ -1,0 +1,30 @@
+name: GRANADA Michel's Life destination 3.0.230 publisher preflight
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/publish-life-v3230-a0219-destination.yml'
+      - '.github/workflows/granada-life-destination-v3230-preflight.yml'
+      - 'tools/test_publisher_v3230.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-life-v3230-a0219-destination.yml'
+      - '.github/workflows/granada-life-destination-v3230-preflight.yml'
+      - 'tools/test_publisher_v3230.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publisher-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Static publisher integrity and immutable 13-asset contract
+        run: python -m unittest discover -s tools -p 'test_publisher_v3230.py' -v
