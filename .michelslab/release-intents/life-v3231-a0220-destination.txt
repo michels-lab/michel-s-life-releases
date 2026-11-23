@@ -1,0 +1,25 @@
+{
+  "schema": "michelslab.destination-owned-unified-publish-intent.v1",
+  "source_repo": "michels-lab/michel-s-life",
+  "source_run": 45245978185,
+  "source_sha": "9ce4881b93e16f378f7f78c1808c897d385d67fc",
+  "source_conclusion": "success",
+  "windows_version": "3.0.231",
+  "android_direct_version": "0.2.20",
+  "android_version_code": 22,
+  "signed_native_android15": "passed",
+  "exact_sha_required_checks": [
+    "Source validation",
+    "UI smoke",
+    "Android UI smoke",
+    "GRANADA Android Direct safe update discovery",
+    "GRANADA Quick Mission and original Pomodoro audio",
+    "GRANADA cross-platform immersive Focus",
+    "GRANADA personal alarms — Windows and Android contracts",
+    "GRANADA Settings live color persistence",
+    "GRANADA classical Focus excerpts"
+  ],
+  "stable_only": true,
+  "required_assets": 13,
+  "verification": "Verify exactly 13 release assets, permanent Android signing certificate, hashes, source SHA, signed API35 native installation, downloaded binaries and public latest release before declaring success."
+}
