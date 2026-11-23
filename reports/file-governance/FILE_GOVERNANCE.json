@@ -21,7 +21,7 @@
     "UNKNOWN_PURPOSE": 10
   },
   "finding_total": 10,
-  "inventory_fingerprint": "781b409302f8f9b84300175a7bafa9c05b2506e2778000ac0d520e65199edafb",
+  "inventory_fingerprint": "86b70515b468dca8f8a979d6ca807c5e35e37f3fb9ca5ddbc872517e2082521d",
   "evidence_fingerprint": "cfc7ff36539666c694eb87cd5b9e3e81bccae80d979b96eeb588e8994913d213",
   "files": [
     {
@@ -120,7 +120,7 @@
       "role": "workflow",
       "purpose": "GitHub Actions automation",
       "certainty": "rule",
-      "blob": "8556a0b5e4f057ab3fcd918d69af9f90c582a6ca"
+      "blob": "5feccf6c4e76eb7ea0a8733bae749c815dd9bde3"
     },
     {
       "path": ".github/workflows/publisher-v3231-preflight.yml",
