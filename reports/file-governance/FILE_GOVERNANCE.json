@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "audit_kind": "deterministic_full_tracked_tree",
-  "tracked_files_total": 48,
-  "classified_files_total": 44,
+  "tracked_files_total": 51,
+  "classified_files_total": 47,
   "docs_content_inspected": 6,
   "large_docs_skipped": 0,
   "excluded_reports": 4,
@@ -12,31 +12,31 @@
     "config": 6,
     "document": 3,
     "index": 1,
-    "source": 1,
-    "test": 3,
-    "unknown": 10,
+    "source": 2,
+    "test": 4,
+    "unknown": 11,
     "workflow": 16
   },
   "finding_counts": {
-    "UNKNOWN_PURPOSE": 10
+    "UNKNOWN_PURPOSE": 11
   },
-  "finding_total": 10,
-  "inventory_fingerprint": "86b70515b468dca8f8a979d6ca807c5e35e37f3fb9ca5ddbc872517e2082521d",
-  "evidence_fingerprint": "cfc7ff36539666c694eb87cd5b9e3e81bccae80d979b96eeb588e8994913d213",
+  "finding_total": 11,
+  "inventory_fingerprint": "370f1ee8a04c9086cdbce86453a00cf6b5adaabb7a1f7b1e1722623110cc70af",
+  "evidence_fingerprint": "3cc070a45b5cdf12e327e3b6d4a66cf58e13227bb40099f3ab440b51123bf9fd",
   "files": [
     {
       "path": ".github/workflows/file-governance-audit.yml",
       "role": "workflow",
       "purpose": "GitHub Actions automation",
       "certainty": "rule",
-      "blob": "9e1d792c040f627929997a465b412f045b67aeb1"
+      "blob": "684f84f31b17596334dc92f30eb44ab8333b5bfb"
     },
     {
       "path": ".github/workflows/file-steward-pr-validation.yml",
       "role": "workflow",
       "purpose": "GitHub Actions automation",
       "certainty": "rule",
-      "blob": "5163f5e1348f32b455d7791aea6b4a5d649a9f31"
+      "blob": "b234471be4f1c04dbcf755cd820162b6774b8d3a"
     },
     {
       "path": ".github/workflows/granada-life-destination-v3230-preflight.yml",
@@ -235,6 +235,13 @@
       "blob": "d52d8af1e93f8ce39501fb9f78bd357b23a6b139"
     },
     {
+      "path": ".michelslab/release-intents/life-v3231-a0220-destination.txt",
+      "role": "unknown",
+      "purpose": "function unknown: owner classification required",
+      "certainty": "unknown",
+      "blob": "ed7bb44a01f0f8643cd45793a47f7ee22938402c"
+    },
+    {
       "path": "AGENTS.md",
       "role": "agent",
       "purpose": "assistant role/instructions",
@@ -305,11 +312,25 @@
       "blob": "8ca0e7520aaa29098bc3df0833bba089a17c3d81"
     },
     {
+      "path": "tools/ci_publish_file_steward.py",
+      "role": "source",
+      "purpose": "code/test implementation",
+      "certainty": "rule",
+      "blob": "9fb9ad2c16f52a1da0410871ea2e9d5a3fb2766f"
+    },
+    {
       "path": "tools/repository_file_auditor.py",
       "role": "source",
       "purpose": "code/test implementation",
       "certainty": "rule",
       "blob": "0e79542fa340086eaee2f04b93516a73aa61f7ce"
+    },
+    {
+      "path": "tools/test_ci_publish_file_steward.py",
+      "role": "test",
+      "purpose": "code/test implementation",
+      "certainty": "rule",
+      "blob": "8443333a1a601fc78d58b6813e1ba1724d30b294"
     },
     {
       "path": "tools/test_publisher_v3230.py",
@@ -420,6 +441,15 @@
       "code": "UNKNOWN_PURPOSE",
       "severity": "review",
       "path": ".michelslab/release-intents/life-v3230-a0219-destination.txt",
+      "observation": "No reliable purpose category from path",
+      "recommendation": "Declare role after reviewing usage",
+      "state": "REVIEW_REQUIRED"
+    },
+    {
+      "id": "854b38894955f08b",
+      "code": "UNKNOWN_PURPOSE",
+      "severity": "review",
+      "path": ".michelslab/release-intents/life-v3231-a0220-destination.txt",
       "observation": "No reliable purpose category from path",
       "recommendation": "Declare role after reviewing usage",
       "state": "REVIEW_REQUIRED"
