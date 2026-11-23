@@ -2,9 +2,21 @@
 
 This public repository is the official customer-facing binary/update channel exclusively for **Michel's Life**. Application source code and development history live in the separate app repository.
 
-## Actual última estable verificada — Windows 3.0.230 + Android Direct 0.2.19
+## ÚLTIMA RELEASE ESTABLE — Windows 3.0.231 + Android Direct 0.2.20
 
-**[Descargar la release oficial unificada](https://github.com/michels-lab/michel-s-life-releases/releases/tag/v3.0.230-android-v0.2.19)**. Publicada **2026-11-21 00:31:09 UTC**, `draft=false`, `prerelease=false`, **13 archivos oficiales**. Última estable `v3.0.230-android-v0.2.19` confirmada en GitHub Releases API.
+**[Descargar ahora 3.0.231 / 0.2.20 (code22)](https://github.com/michels-lab/michel-s-life-releases/releases/tag/v3.0.231-android-v0.2.20)**. Publicada **23 de noviembre de 2026, 20:13:17 UTC** (14:13 México centro). Confirmada en GitHub Releases API como `latest`: `draft=false`, `prerelease=false` y **13 assets públicos**, incluido Windows Setup/Portable, APK Android de distribución Direct con certificado permanente y checksum SHA-256, AppBundle y manifiesto de procedencia.
+
+**Evidencia:** origen `9ce4881b93e16f378f7f78c1808c897d385d67fc`, [source CI #45245978185](https://github.com/michels-lab/michel-s-life/actions/runs/45245978185) **SUCCESS**, nueve suites exact-SHA y cuatro jobs `exact-source`, `windows / build`, `android / android`, `signed-native-android15` **SUCCESS**. [Publisher #45256957584](https://github.com/michels-lab/michel-s-life-releases/actions/runs/45256957584) **SUCCESS** en destino, checks de firma, hashes, instalación/arranque y confirmación de los 13 assets antes de hacer pública la release.
+
+**Qué cambió:** sección visible **Música clásica** dentro de Focus/Pomodoro en Windows y Android, con controles directos de Mozart K.545 y Chaikovski Op.39/1, reproducción y persistencia de selección; conserva ocho ambientes y siete tonos finales. Son **fragmentos breves sintetizados** y **no** partituras completas ni grabaciones comerciales. La prueba firmada de actualización Android 0.2.18→0.2.19 está verde en emulador Android15, pero no prueba conservación de contenido privado ni sustituye QA física de Galaxy.
+
+**Pendiente:** aceptación visual/sonora real del propietario, piezas completas, Galaxy con alarmas/Doze y MP3, retención de datos personales, Supabase/OAuth, error intermitente #168, distribución Store. No se ha declarado producto 100%; **7/15 hitos (47%)**. Historial 3.0.230/0.2.19 conservado intacto.
+
+---
+
+## Historial anterior — Windows 3.0.230 + Android Direct 0.2.19
+
+**[Descargar la release anterior](https://github.com/michels-lab/michel-s-life-releases/releases/tag/v3.0.230-android-v0.2.19)**. Publicada **2026-11-21 00:31:09 UTC**, `draft=false`, `prerelease=false`, **13 archivos oficiales**. Históricamente fue la estable verificada en GitHub Releases API al 21-nov; sustituida como latest por 3.0.231/0.2.20.
 
 - **Windows 3.0.230:** Setup, Portable, alias ejecutable, tres checksums SHA-256, `AppBundle.zip` y icono. Instalada e iniciada en CI nativa de Windows.
 - **Android Direct 0.2.19 (versionCode21):** APK de **producción** con certificado Direct permanente y verificado, SHA-256 y manifiesto de procedencia; se instaló, completó onboarding y relanzó en Android15 emulado desde el **mismo source run**. No es versión Play Store.
