@@ -2,71 +2,52 @@ name: Verify latest Michel's Life unified customer release
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/verify-life-unified-release.yml'
+      - 'tools/verify_latest_life_release.py'
+      - 'tools/test_verify_latest_life_release.py'
   push:
     branches: [main]
     paths:
-      - README.md
+      - 'README.md'
       - '.github/workflows/verify-life-unified-release.yml'
-      - '.github/workflows/publish-life-v3217-a025-destination.yml'
+      - 'tools/verify_latest_life_release.py'
+      - 'tools/test_verify_latest_life_release.py'
+      - '.michelslab/release-intents/life-*-destination.txt'
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   verify:
     if: github.repository == 'michels-lab/michel-s-life-releases'
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
     env:
       GH_TOKEN: ${{ github.token }}
-      TAG: v3.0.217
-      ANDROID_CERT_PIN: 36a9f5144243d14ebade9d38559cfd7d4d9207c1edba01e6f0fbdd5f076a50fa
-      SOURCE_SHA: 05ccaa52c2899ba969d2d0ad396669d2552b0f2f
     steps:
       - uses: actions/checkout@v4
-      - name: Require correct product's current, publicly published unified release
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run offline version-agnostic asset, provenance, and digest security tests
+        run: python3 -m unittest discover -s tools -p 'test_verify_latest_life_release.py' -v
+      - name: Verify current actual public release 13 assets, three downloaded binaries, permanent Android signer and source CI
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
-          gh api "repos/$GITHUB_REPOSITORY/releases/latest" > /tmp/latest.json
-          jq -e --arg tag "$TAG" '.tag_name==$tag and .draft==false and .prerelease==false and (.assets|length)==13 and (.name|contains("Windows v3.0.217 + Android v0.2.5"))' /tmp/latest.json
-          gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100"             | jq -e 'all(.[]; (.tag_name|startswith("louderme-")|not))'
-          for filename in             MichelsLife-Setup-v3.0.217.exe MichelsLife-Setup-v3.0.217.exe.sha256             MichelsLife-Portable-v3.0.217.exe MichelsLife-Portable-v3.0.217.exe.sha256             MichelsLife-v3.0.217.exe MichelsLife-v3.0.217.exe.sha256             MichelsLife-Android-Direct-v0.2.5.apk MichelsLife-Android-Direct-v0.2.5.apk.sha256             AppBundle.zip michels_life_icon.ico             android-v0.2.5-manifest.json android-signing-certificate-v0.2.5.txt             release-provenance.json; do
-            jq -e --arg filename "$filename" 'any(.assets[]; .name==$filename and .size>0 and (.digest|startswith("sha256:")))' /tmp/latest.json
-          done
-      - name: Independently download and validate public Windows and Android binaries
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir verify
-          gh release download "$TAG" --dir verify             --pattern 'MichelsLife-Android-Direct-v0.2.5.apk*'             --pattern 'MichelsLife-Setup-v3.0.217.exe*'             --pattern 'MichelsLife-Portable-v3.0.217.exe*'             --pattern 'android-v0.2.5-manifest.json'             --pattern 'release-provenance.json'
-          ( cd verify && sha256sum -c MichelsLife-Android-Direct-v0.2.5.apk.sha256 )
-          ( cd verify && sha256sum -c MichelsLife-Setup-v3.0.217.exe.sha256 )
-          ( cd verify && sha256sum -c MichelsLife-Portable-v3.0.217.exe.sha256 )
-          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs verify/MichelsLife-Android-Direct-v0.2.5.apk > /tmp/apk-signature.txt
-          actual="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' /tmp/apk-signature.txt | tr -d ':' | tr '[:upper:]' '[:lower:]')"
-          test "$actual" = "$ANDROID_CERT_PIN"
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging verify/MichelsLife-Android-Direct-v0.2.5.apk | grep -Eq "name='com.michelslab.michelslife' versionCode='7' versionName='0.2.5'"
-          jq -e --arg source "$SOURCE_SHA" --arg cert "$ANDROID_CERT_PIN" '
-            .sourceSha==$source and .package=="com.michelslab.michelslife" and .versionName=="0.2.5"
-            and .versionCode==7 and .signerCertSha256==$cert
-            and .distribution=="production-signed"' verify/android-v0.2.5-manifest.json
-          python3 - <<'PY'
-          import json,os
-          release=json.load(open('/tmp/latest.json'))
-          manifest=json.load(open('verify/release-provenance.json'))
-          if manifest['source_repo'] != "michels-lab/michel-s-life" or manifest['source_sha'] != os.environ['SOURCE_SHA']:
-              raise SystemExit('Wrong source provenance')
-          if manifest['android_certificate_sha256'] != os.environ['ANDROID_CERT_PIN']:
-              raise SystemExit('Signer provenance mismatch')
-          if manifest.get('source_run') != 38175360615 or manifest.get('publisher_run') != 38176304417:
-              raise SystemExit('Missing source or publisher run evidence')
-          expected=manifest['assets_sha256']
-          assets={a['name']:a['digest'] for a in release['assets']}
-          if len(expected)!=12:
-              raise SystemExit('Expected twelve original release assets')
-          for name,digest in expected.items():
-              if assets.get(name)!='sha256:'+digest:
-                  raise SystemExit(f'Public release asset drift: {name}')
-          print('PASS: latest product-only Michel\'s Life unified v3.0.217 + v0.2.5 has 13 assets, provenance and hashes; no foreign app releases.')
-          PY
+          python3 tools/verify_latest_life_release.py --repo "$GITHUB_REPOSITORY" --directory artifacts/verified-latest
+      - name: Preserve validation metadata, no user-private files
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: MichelsLife-latest-public-release-verification
+          path: |
+            artifacts/verified-latest/android-v*-manifest.json
+            artifacts/verified-latest/release-provenance.json
+            artifacts/verified-latest/*.sha256
+          if-no-files-found: warn
+          retention-days: 14
