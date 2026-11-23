@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "audit_kind": "deterministic_full_tracked_tree",
-  "tracked_files_total": 51,
-  "classified_files_total": 47,
+  "tracked_files_total": 53,
+  "classified_files_total": 49,
   "docs_content_inspected": 6,
   "large_docs_skipped": 0,
   "excluded_reports": 4,
@@ -12,8 +12,8 @@
     "config": 6,
     "document": 3,
     "index": 1,
-    "source": 2,
-    "test": 4,
+    "source": 3,
+    "test": 5,
     "unknown": 11,
     "workflow": 16
   },
@@ -21,7 +21,7 @@
     "UNKNOWN_PURPOSE": 11
   },
   "finding_total": 11,
-  "inventory_fingerprint": "58682f2bd8bd1143264bf6ea7c2d69f8bed53055d63b903f4fa098ee4c0ca298",
+  "inventory_fingerprint": "c5a0c70d7151d28c03aeb6af42964a9afbae4677add55ccc894bcf611d603d47",
   "evidence_fingerprint": "3cc070a45b5cdf12e327e3b6d4a66cf58e13227bb40099f3ab440b51123bf9fd",
   "files": [
     {
@@ -134,7 +134,7 @@
       "role": "workflow",
       "purpose": "GitHub Actions automation",
       "certainty": "rule",
-      "blob": "43d8570c029c5bfe001414b27b168d43f93fec72"
+      "blob": "affeca799a6df5f9506bb70841e4538a52111afb"
     },
     {
       "path": ".michelslab/GRANADA.md",
@@ -352,6 +352,20 @@
       "purpose": "code/test implementation",
       "certainty": "rule",
       "blob": "97240782f13b3fe1d6a7768c171d750be9923443"
+    },
+    {
+      "path": "tools/test_verify_latest_life_release.py",
+      "role": "test",
+      "purpose": "code/test implementation",
+      "certainty": "rule",
+      "blob": "2ef0751ab744549d4f2738614adebe7d184dc9e0"
+    },
+    {
+      "path": "tools/verify_latest_life_release.py",
+      "role": "source",
+      "purpose": "code/test implementation",
+      "certainty": "rule",
+      "blob": "8fb2b7f1124aa5755d8593eae3dbd92e897b621d"
     }
   ],
   "findings": [
