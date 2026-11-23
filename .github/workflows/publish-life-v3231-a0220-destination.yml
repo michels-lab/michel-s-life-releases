@@ -53,9 +53,9 @@ jobs:
           # token; every required SAME-SHA build and signed native job must be
           # green independently. Never mistake the source run's aggregate red
           # publisher for a signed-build failure.
-          jq -e --arg sha "$SOURCE_SHA" '.head_sha==$sha and .event=="push"' /tmp/source-run.json
+          jq -e --arg sha "$SOURCE_SHA" '.head_sha==$sha and .event=="push" and .status=="completed" and .conclusion=="success"' /tmp/source-run.json
           gh api "repos/$SOURCE/actions/runs?head_sha=$SOURCE_SHA&per_page=100" > /tmp/sha-runs.json
-          for gate in "Source validation" "Android UI smoke" "UI smoke" "GRANADA Settings live color persistence" "GRANADA classical Focus excerpts"; do
+          for gate in "Source validation" "Android UI smoke" "UI smoke" "GRANADA Settings live color persistence" "GRANADA classical Focus excerpts" "GRANADA Android Direct safe update discovery" "GRANADA Quick Mission and original Pomodoro audio" "GRANADA cross-platform immersive Focus" "GRANADA personal alarms — Windows and Android contracts"; do
             jq -e --arg name "$gate" --arg sha "$SOURCE_SHA" 'any(.workflow_runs[]; .name==$name and .head_sha==$sha and .conclusion=="success")' /tmp/sha-runs.json
           done
           gh api "repos/$SOURCE/actions/runs/$SOURCE_RUN/jobs?per_page=100" > /tmp/source-jobs.json
@@ -98,7 +98,7 @@ jobs:
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs android-signed/MichelsLife-Android-Direct-v0.2.20.apk > android-signing.txt
           actual_cert="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' android-signing.txt | tr -d ':' | tr '[:upper:]' '[:lower:]')"
           test "$actual_cert" = "$ANDROID_CERT_PIN"
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging android-signed/MichelsLife-Android-Direct-v0.2.20.apk | grep -Eq "name='com.michelslab.michelslife' versionCode='21' versionName='0.2.20'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging android-signed/MichelsLife-Android-Direct-v0.2.20.apk | grep -Eq "name='com.michelslab.michelslife' versionCode='22' versionName='0.2.20'"
           for file in MichelsLife-Setup-v3.0.231.exe MichelsLife-Portable-v3.0.231.exe MichelsLife-v3.0.231.exe; do
             test -s "windows/$file"
             test -s "windows/$file.sha256"
