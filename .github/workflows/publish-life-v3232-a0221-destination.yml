@@ -133,7 +133,7 @@ jobs:
             "source_repo": os.environ["SOURCE"],
             "source_sha": os.environ["SOURCE_SHA"],
             "windows_version":"3.0.232","android_version":"0.2.21",
-            "android_version_code":22, "android_certificate_sha256":os.environ["ANDROID_CERT_PIN"],
+            "android_version_code":23, "android_certificate_sha256":os.environ["ANDROID_CERT_PIN"],
             "source_run":int(os.environ["SOURCE_RUN"]), "publisher_run":int(os.environ["GITHUB_RUN_ID"]),
             "assets_sha256":assets}
           (p/"release-provenance.json").write_text(json.dumps(payload,indent=2)+"\n")
