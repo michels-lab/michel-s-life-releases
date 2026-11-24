@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "audit_kind": "deterministic_full_tracked_tree",
-  "tracked_files_total": 53,
-  "classified_files_total": 49,
+  "tracked_files_total": 56,
+  "classified_files_total": 52,
   "docs_content_inspected": 6,
   "large_docs_skipped": 0,
   "excluded_reports": 4,
@@ -13,15 +13,15 @@
     "document": 3,
     "index": 1,
     "source": 3,
-    "test": 5,
+    "test": 6,
     "unknown": 11,
-    "workflow": 16
+    "workflow": 18
   },
   "finding_counts": {
     "UNKNOWN_PURPOSE": 11
   },
   "finding_total": 11,
-  "inventory_fingerprint": "8296b2427079e38cc386e271263081f4226e75f552d56800d4250035ea2471d1",
+  "inventory_fingerprint": "6fdff9793e4065f3230e8d0539c03181c1d9e4c0b722a7d81743874085aaf75c",
   "evidence_fingerprint": "3cc070a45b5cdf12e327e3b6d4a66cf58e13227bb40099f3ab440b51123bf9fd",
   "files": [
     {
@@ -123,11 +123,25 @@
       "blob": "5feccf6c4e76eb7ea0a8733bae749c815dd9bde3"
     },
     {
+      "path": ".github/workflows/publish-life-v3232-a0221-destination.yml",
+      "role": "workflow",
+      "purpose": "GitHub Actions automation",
+      "certainty": "rule",
+      "blob": "5f093f0c31526018483399ff8df09474e34de6c4"
+    },
+    {
       "path": ".github/workflows/publisher-v3231-preflight.yml",
       "role": "workflow",
       "purpose": "GitHub Actions automation",
       "certainty": "rule",
       "blob": "44eab8c64fce24cfc1776fa0a2724d49d2d3ade0"
+    },
+    {
+      "path": ".github/workflows/publisher-v3232-preflight.yml",
+      "role": "workflow",
+      "purpose": "GitHub Actions automation",
+      "certainty": "rule",
+      "blob": "daf9ec6b56a67d66be2d716cc40efdd1df28c39d"
     },
     {
       "path": ".github/workflows/verify-life-unified-release.yml",
@@ -345,6 +359,13 @@
       "purpose": "code/test implementation",
       "certainty": "rule",
       "blob": "cb1661d43f8a7a4b812b723b66d85b7171e068ba"
+    },
+    {
+      "path": "tools/test_publisher_v3232.py",
+      "role": "test",
+      "purpose": "code/test implementation",
+      "certainty": "rule",
+      "blob": "7a59fc5fed39b5a4f669693a3549f0be27eddf2c"
     },
     {
       "path": "tools/test_repository_file_auditor.py",
