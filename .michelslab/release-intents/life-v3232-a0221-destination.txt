@@ -1,0 +1,11 @@
+{
+  "schema": "michelslab.destination-owned-stable-release-intent.v1",
+  "product": "Michel's Life",
+  "source_run": 45478901654,
+  "source_sha": "d82359c010ece7fc0f12d2dcc8238d718093ad22",
+  "windows_version": "3.0.232",
+  "android_direct_version": "0.2.21",
+  "android_version_code": 23,
+  "stable_only": true,
+  "authorization": "Operación Granada: publish same-run production artifacts after all 11 exact SHA gates and four source jobs SUCCESS; verify signer, checksums and 13 assets before atomic public release. No overwrite."
+}
