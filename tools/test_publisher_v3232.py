@@ -16,6 +16,10 @@ CHECKS = (
     "GRANADA classical Focus excerpts",
     "GRANADA - Story Focus touch provenance",
     "GRANADA Data Health and recovery safety",
+    "GRANADA Android Direct safe update discovery",
+    "GRANADA Quick Mission and original Pomodoro audio",
+    "GRANADA cross-platform immersive Focus",
+    "GRANADA personal alarms — Windows and Android contracts",
 )
 ASSETS = (
     "MichelsLife-Setup-v3.0.232.exe",
@@ -66,6 +70,9 @@ class PublisherConfig(unittest.TestCase):
         ):
             self.assertIn(marker, s)
         self.assertRegex(s, r"android_version_code[\"']?:23")
+        self.assertIn("versionCode='23' versionName='0.2.21'", s)
+        self.assertNotIn("versionCode='22'", s)
+        self.assertEqual(len(CHECKS), 11)
         self.assertNotIn("continue-on-error", s)
         self.assertNotIn("|| true", s)
 
