@@ -14,6 +14,8 @@ CHECKS = (
     "Android UI smoke",
     "GRANADA Settings live color persistence",
     "GRANADA classical Focus excerpts",
+    "GRANADA - Story Focus touch provenance",
+    "GRANADA Data Health and recovery safety",
 )
 ASSETS = (
     "MichelsLife-Setup-v3.0.232.exe",
@@ -63,7 +65,7 @@ class PublisherConfig(unittest.TestCase):
             "sha256sum -c", "LAUNCH PASS",
         ):
             self.assertIn(marker, s)
-        self.assertRegex(s, r"android_version_code[\"']?:22")
+        self.assertRegex(s, r"android_version_code[\"']?:23")
         self.assertNotIn("continue-on-error", s)
         self.assertNotIn("|| true", s)
 
