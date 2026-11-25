@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "audit_kind": "deterministic_full_tracked_tree",
-  "tracked_files_total": 58,
-  "classified_files_total": 54,
+  "tracked_files_total": 59,
+  "classified_files_total": 55,
   "docs_content_inspected": 6,
   "large_docs_skipped": 0,
   "excluded_reports": 4,
@@ -14,15 +14,15 @@
     "index": 1,
     "source": 3,
     "test": 6,
-    "unknown": 12,
+    "unknown": 13,
     "workflow": 19
   },
   "finding_counts": {
-    "UNKNOWN_PURPOSE": 12
+    "UNKNOWN_PURPOSE": 13
   },
-  "finding_total": 12,
-  "inventory_fingerprint": "c6c2e728899db72f3ea898dc57d51d43750d8f553989f2a91715dd6dfde7e639",
-  "evidence_fingerprint": "db76950c99ef0aa5a65e8b661a2b2721691b7f18c218a186333b9fe5c17198b6",
+  "finding_total": 13,
+  "inventory_fingerprint": "b795155998597a0f4c7c34777e7cb97ffddcdef644ac958756ab5e3c29379abc",
+  "evidence_fingerprint": "fc9ca8069d4d70ebb4f574c71f52badebc3544dd255563d9b5c4edfc3f25910f",
   "files": [
     {
       "path": ".github/workflows/file-governance-audit.yml",
@@ -270,6 +270,13 @@
       "blob": "9f1458a74d482cbb989542814d0d053211ae7619"
     },
     {
+      "path": ".michelslab/release-intents/life-v3233-a0222-destination.txt",
+      "role": "unknown",
+      "purpose": "function unknown: owner classification required",
+      "certainty": "unknown",
+      "blob": "ed3c0ea7636cee5f73ca74a597230f30e4275d16"
+    },
+    {
       "path": "AGENTS.md",
       "role": "agent",
       "purpose": "assistant role/instructions",
@@ -508,6 +515,15 @@
       "code": "UNKNOWN_PURPOSE",
       "severity": "review",
       "path": ".michelslab/release-intents/life-v3232-a0221-destination.txt",
+      "observation": "No reliable purpose category from path",
+      "recommendation": "Declare role after reviewing usage",
+      "state": "REVIEW_REQUIRED"
+    },
+    {
+      "id": "3797e12618646188",
+      "code": "UNKNOWN_PURPOSE",
+      "severity": "review",
+      "path": ".michelslab/release-intents/life-v3233-a0222-destination.txt",
       "observation": "No reliable purpose category from path",
       "recommendation": "Declare role after reviewing usage",
       "state": "REVIEW_REQUIRED"
