@@ -1,0 +1,14 @@
+{
+  "schema": "michelslab.destination-owned-stable-release-intent.v1",
+  "product": "Michel's Life",
+  "source_run": 45741133970,
+  "source_sha": "632f84e6345c4eb1cb44d669837edd854d399464",
+  "windows_version": "3.0.234",
+  "android_direct_version": "0.2.23",
+  "android_version_code": 25,
+  "stable_only": true,
+  "authorization": "Operación Granada: publish same-run production artifacts after all 11 exact SHA gates and four source jobs SUCCESS; verify signer, checksums and 13 assets before atomic public release. No overwrite.",
+  "tag": "v3.0.234-android-v0.2.23",
+  "release_tag": "v3.0.234-android-v0.2.23",
+  "validation": "Source run completed SUCCESS; eleven exact SHA gates and four required source jobs independently SUCCESS. Production-signed Android15 install/relaunch and Windows native launches passed; physical acceptance and API34/36 remain unverified."
+}
