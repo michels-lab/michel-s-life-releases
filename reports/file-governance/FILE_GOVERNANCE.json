@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "audit_kind": "deterministic_full_tracked_tree",
-  "tracked_files_total": 59,
-  "classified_files_total": 55,
+  "tracked_files_total": 60,
+  "classified_files_total": 56,
   "docs_content_inspected": 6,
   "large_docs_skipped": 0,
   "excluded_reports": 4,
@@ -15,13 +15,13 @@
     "source": 3,
     "test": 6,
     "unknown": 13,
-    "workflow": 19
+    "workflow": 20
   },
   "finding_counts": {
     "UNKNOWN_PURPOSE": 13
   },
   "finding_total": 13,
-  "inventory_fingerprint": "b795155998597a0f4c7c34777e7cb97ffddcdef644ac958756ab5e3c29379abc",
+  "inventory_fingerprint": "1d4bef3d4eef49c9a912368205462f31a2b0c807d9e13a5ca397f490ffd6aa68",
   "evidence_fingerprint": "fc9ca8069d4d70ebb4f574c71f52badebc3544dd255563d9b5c4edfc3f25910f",
   "files": [
     {
@@ -135,6 +135,13 @@
       "purpose": "GitHub Actions automation",
       "certainty": "rule",
       "blob": "49fceebd58a7c88b6989b662d19aef103b2679b1"
+    },
+    {
+      "path": ".github/workflows/publish-life-v3234-a0223-destination.yml",
+      "role": "workflow",
+      "purpose": "GitHub Actions automation",
+      "certainty": "rule",
+      "blob": "ebd96ac976be2a1dec654ca6197334d0f78ded74"
     },
     {
       "path": ".github/workflows/publisher-v3231-preflight.yml",
