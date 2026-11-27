@@ -1,0 +1,36 @@
+name: Preflight v3.0.235 Android 0.2.24 destination-only stable publisher
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/publish-life-v3235-a0224-destination.yml'
+      - '.github/workflows/publisher-v3235-preflight.yml'
+      - 'tools/test_publisher_v3235.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-life-v3235-a0224-destination.yml'
+      - '.github/workflows/publisher-v3235-preflight.yml'
+      - 'tools/test_publisher_v3235.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-source-destination-policy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fail closed on publisher source/version/signature and 13-asset contract
+        run: python3 -m unittest discover -s tools -p 'test_publisher_v3235.py' -v
+      - name: Require publisher intent to remain absent in this staging PR
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -e .michelslab/release-intents/life-v3235-a0224-destination.txt
+          echo "PUBLISHER_STAGED_INERT: owner intent must be isolated after source signed QA"
