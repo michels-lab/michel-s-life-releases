@@ -5,7 +5,7 @@ No file is auto-deleted or declared unused.
 
 ## Coverage
 
-Tracked: 62; classified: 58; readable documents: 6; above read cap: 0; findings: 14.
+Tracked: 65; classified: 61; readable documents: 6; above read cap: 0; findings: 15.
 
 ## File roles
 
@@ -17,9 +17,9 @@ Tracked: 62; classified: 58; readable documents: 6; above read cap: 0; findings:
 | document | 3 |
 | index | 1 |
 | source | 3 |
-| test | 6 |
-| unknown | 14 |
-| workflow | 21 |
+| test | 7 |
+| unknown | 15 |
+| workflow | 22 |
 
 ## Findings (human review required)
 
@@ -37,6 +37,7 @@ Tracked: 62; classified: 58; readable documents: 6; above read cap: 0; findings:
 - **REVIEW / UNKNOWN_PURPOSE** .michelslab/release-intents/life-v3232-a0221-destination.txt: No reliable purpose category from path. Next: Declare role after reviewing usage (ID f4ff8154ca11c2d8)
 - **REVIEW / UNKNOWN_PURPOSE** .michelslab/release-intents/life-v3233-a0222-destination.txt: No reliable purpose category from path. Next: Declare role after reviewing usage (ID 3797e12618646188)
 - **REVIEW / UNKNOWN_PURPOSE** .michelslab/release-intents/life-v3234-a0223-destination.txt: No reliable purpose category from path. Next: Declare role after reviewing usage (ID 4fc06799762aa395)
+- **REVIEW / UNKNOWN_PURPOSE** .michelslab/release-intents/life-v3235-a0224-destination.txt: No reliable purpose category from path. Next: Declare role after reviewing usage (ID 87c4c096bbadf017)
 
 Complete path → purpose/role/certainty list lives in FILE_GOVERNANCE.json. SUMMARY.json has counts only for master polling.
 A dated file, duplicate, or suspicious name is an **investigation candidate**, not unwanted material.
